@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sales Receipt | Ikigugu Group Ltd</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <style>
+      /* Sales Receipt Page Specific Styles */
+      :root {
+        --primary-dark: #3a56d4;
+        --receipt-bg: #ffffff;
+        --receipt-border: #e2e8f0;
+        --receipt-text: #1b263b;
+        --receipt-secondary: #718096;
+      }
+
+      .receipt-container {
+        padding: 2rem;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      .receipt-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .receipt-card {
+        background: var(--receipt-bg);
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+        animation: fadeIn 0.5s ease;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .receipt-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 8px;
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+      }
+
+      .receipt-company {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px dashed var(--receipt-border);
+      }
+
+      .company-logo {
+        display: flex;
+        align-items: center;
+      }
+
+      .company-logo img {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+      }
+
+      .company-logo .logo-text {
+        margin-left: 1rem;
+      }
+
+      .company-logo .company-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.25rem;
+      }
+
+      .company-logo .company-tagline {
+        font-size: 0.9rem;
+        color: var(--receipt-secondary);
+      }
+
+      .receipt-info {
+        text-align: right;
+      }
+
+      .receipt-info .receipt-id {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+      }
+
+      .receipt-info .receipt-date {
+        font-size: 0.9rem;
+        color: var(--receipt-secondary);
+      }
+
+      .receipt-parties {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px dashed var(--receipt-border);
+      }
+
+      .receipt-party {
+        animation: fadeIn 0.5s ease;
+      }
+
+      .receipt-party h3 {
+        font-size: 1rem;
+        color: var(--receipt-secondary);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .receipt-party .party-details {
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
+      .receipt-party .party-name {
+        font-weight: 600;
+        color: var(--receipt-text);
+        margin-bottom: 0.25rem;
+      }
+
+      .receipt-party .party-address,
+      .receipt-party .party-contact {
+        color: var(--receipt-secondary);
+      }
+
+      .receipt-items {
+        margin-bottom: 2rem;
+      }
+
+      .receipt-items-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1.5rem;
+      }
+
+      .receipt-items-table th {
+        background-color: rgba(67, 97, 238, 0.05);
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+      }
+
+      .receipt-items-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--receipt-border);
+      }
+
+      .receipt-items-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .receipt-items-table .item-name {
+        font-weight: 600;
+        color: var(--receipt-text);
+      }
+
+      .receipt-items-table .item-description {
+        font-size: 0.85rem;
+        color: var(--receipt-secondary);
+        margin-top: 0.25rem;
+      }
+
+      .receipt-totals {
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 1.5rem;
+        border-top: 1px dashed var(--receipt-border);
+      }
+
+      .totals-table {
+        width: 350px;
+      }
+
+      .totals-table td {
+        padding: 0.5rem 0;
+      }
+
+      .totals-table .total-label {
+        font-weight: 600;
+        color: var(--receipt-secondary);
+      }
+
+      .totals-table .total-value {
+        text-align: right;
+        font-weight: 600;
+        color: var(--receipt-text);
+      }
+
+      .totals-table .grand-total {
+        font-size: 1.2rem;
+        color: var(--primary);
+        font-weight: 700;
+      }
+
+      .receipt-footer {
+        margin-top: 2rem;
+        text-align: center;
+        padding-top: 1.5rem;
+        border-top: 1px dashed var(--receipt-border);
+      }
+
+      .receipt-footer .thank-you {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+      }
+
+      .receipt-footer .footer-note {
+        font-size: 0.9rem;
+        color: var(--receipt-secondary);
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      .receipt-actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .btn-print {
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 6px rgba(67, 97, 238, 0.2);
+      }
+
+      .btn-print:hover {
+        background: linear-gradient(to right, var(--secondary), var(--primary));
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(67, 97, 238, 0.3);
+      }
+
+      .btn-back {
+        padding: 0.75rem 1.5rem;
+        background: transparent;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .btn-back:hover {
+        background: rgba(67, 97, 238, 0.05);
+        transform: translateY(-2px);
+      }
+
+      .watermark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        font-size: 8rem;
+        font-weight: 800;
+        color: rgba(67, 97, 238, 0.03);
+        pointer-events: none;
+        white-space: nowrap;
+      }
+
+      /* Animation for receipt items */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .receipt-items-table tr {
+        animation: fadeInUp 0.5s ease;
+        animation-fill-mode: both;
+      }
+
+      .receipt-items-table tr:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+
+      .receipt-items-table tr:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      .receipt-items-table tr:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+
+      .receipt-items-table tr:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+
+      /* Print styles */
+      @media print {
+        body {
+          background: white;
+        }
+
+        .dashboard-container {
+          display: block;
+        }
+
+        .sidebar,
+        .main-header,
+        .receipt-actions,
+        .btn-back,
+        .btn-print {
+          display: none !important;
+        }
+
+        .main-content {
+          margin-left: 0;
+          padding: 0;
+        }
+
+        .receipt-container {
+          padding: 0;
+        }
+
+        .receipt-card {
+          box-shadow: none;
+          padding: 0;
+        }
+
+        .receipt-card::before {
+          display: none;
+        }
+
+        .watermark {
+          display: none;
+        }
+      }
+
+      /* Responsive styles */
+      @media (max-width: 768px) {
+        .receipt-container {
+          padding: 1rem;
+        }
+
+        .receipt-card {
+          padding: 1.5rem;
+        }
+
+        .receipt-company {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1.5rem;
+        }
+
+        .receipt-info {
+          text-align: left;
+        }
+
+        .receipt-items-table {
+          display: block;
+          overflow-x: auto;
+        }
+
+        .receipt-totals {
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2><i class="fas fa-briefcase"></i> Ikigugu</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li>
+              <a href="../index.html"
+                ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="./clients.html"><i class="fas fa-users"></i> Clients</a>
+            </li>
+            <li>
+              <a href="./products.html"
+                ><i class="fas fa-boxes"></i> Products</a
+              >
+            </li>
+            <li class="active">
+              <a href="./sales.html"><i class="fas fa-chart-line"></i> Sales</a>
+            </li>
+            <li>
+              <a href="./students.html"
+                ><i class="fas fa-user-graduate"></i> Students</a
+              >
+            </li>
+            <li>
+              <a href="courses.html"
+                ><i class="fas fa-book-open"></i> Courses</a
+              >
+            </li>
+            <li>
+              <a href="./report.html"
+                ><i class="fas fa-file-alt"></i> Reports</a
+              >
+            </li>
+            <li>
+              <a href="employees.html"
+                ><i class="fas fa-user-tie"></i> Employees</a
+              >
+            </li>
+            <li>
+              <a href="./notifications.html"
+                ><i class="fas fa-bell"></i> Notifications</a
+              >
+            </li>
+            <li>
+              <a href="./profile.html"><i class="fas fa-user"></i> Profile</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="main-header">
+          <div class="header-left">
+            <h1>Sales Receipt</h1>
+          </div>
+          <div class="header-right">
+            <div class="user-profile">
+              <img src="./Fab.jpg" alt="User" />
+              <span>Admin</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-wrapper receipt-container">
+          <div class="receipt-header">
+            <h2><i class="fas fa-file-invoice"></i> Receipt</h2>
+            <button class="btn-back" onclick="window.location.href='sales.html'">
+              <i class="fas fa-arrow-left"></i> Back to Sales
+            </button>
+          </div>
+
+          <div class="receipt-card">
+            <div class="watermark">PAID</div>
+            
+            <!-- Company and Receipt Info -->
+            <div class="receipt-company">
+              <div class="company-logo">
+                <div class="logo-icon">
+                  <i class="fas fa-briefcase fa-3x" style="color: var(--primary)"></i>
+                </div>
+                <div class="logo-text">
+                  <div class="company-name">Ikigugu Group Ltd</div>
+                  <div class="company-tagline">Business Solutions</div>
+                </div>
+              </div>
+              <div class="receipt-info">
+                <div class="receipt-id">Receipt #INV-2023-001</div>
+                <div class="receipt-date">Date: August 15, 2023</div>
+                <div class="receipt-date">Due Date: August 30, 2023</div>
+              </div>
+            </div>
+
+            <!-- Customer and Business Info -->
+            <div class="receipt-parties">
+              <div class="receipt-party">
+                <h3><i class="fas fa-building"></i> From</h3>
+                <div class="party-details">
+                  <div class="party-name">Ikigugu Group Ltd</div>
+                  <div class="party-address">
+                    123 Business Avenue<br />
+                    Kigali, Rwanda
+                  </div>
+                  <div class="party-contact">
+                    <div>Email: info@ikigugu.com</div>
+                    <div>Phone: +250 788 123 456</div>
+                    <div>Tax ID: RW123456789</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="receipt-party">
+                <h3><i class="fas fa-user"></i> To</h3>
+                <div class="party-details">
+                  <div class="party-name">John Smith</div>
+                  <div class="party-address">
+                    456 Client Street<br />
+                    Kigali, Rwanda
+                  </div>
+                  <div class="party-contact">
+                    <div>Email: john@acme.com</div>
+                    <div>Phone: +250 788 987 654</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Receipt Items -->
+            <div class="receipt-items">
+              <table class="receipt-items-table">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="item-name">Website Development</div>
+                      <div class="item-description">Custom business website with e-commerce functionality</div>
+                    </td>
+                    <td>1</td>
+                    <td>350,000 RWF</td>
+                    <td>350,000 RWF</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="item-name">Logo Design</div>
+                      <div class="item-description">Professional brand logo with multiple formats</div>
+                    </td>
+                    <td>1</td>
+                    <td>75,000 RWF</td>
+                    <td>75,000 RWF</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="item-name">SEO Package</div>
+                      <div class="item-description">3-month search engine optimization service</div>
+                    </td>
+                    <td>1</td>
+                    <td>120,000 RWF</td>
+                    <td>120,000 RWF</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="item-name">Content Writing</div>
+                      <div class="item-description">10 pages of professional content</div>
+                    </td>
+                    <td>10</td>
+                    <td>5,000 RWF</td>
+                    <td>50,000 RWF</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- Totals -->
+              <div class="receipt-totals">
+                <table class="totals-table">
+                  <tr>
+                    <td class="total-label">Subtotal:</td>
+                    <td class="total-value">595,000 RWF</td>
+                  </tr>
+                  <tr>
+                    <td class="total-label">Tax (18%):</td>
+                    <td class="total-value">107,100 RWF</td>
+                  </tr>
+                  <tr>
+                    <td class="total-label">Discount:</td>
+                    <td class="total-value">-50,000 RWF</td>
+                  </tr>
+                  <tr>
+                    <td class="total-label grand-total">Grand Total:</td>
+                    <td class="total-value grand-total">652,100 RWF</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <!-- Receipt Footer -->
+            <div class="receipt-footer">
+              <div class="thank-you">Thank You for Your Business!</div>
+              <div class="footer-note">
+                This receipt was generated electronically and is valid without a signature.
+                For any questions regarding this receipt, please contact our finance department.
+              </div>
+            </div>
+          </div>
+
+          <div class="receipt-actions">
+            <button class="btn-print" id="printReceipt">
+              <i class="fas fa-print"></i> Print Receipt
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Print functionality
+        const printButton = document.getElementById("printReceipt");
+        printButton.addEventListener("click", function () {
+          window.print();
+        });
+
+        // Animate receipt card on load
+        const receiptCard = document.querySelector(".receipt-card");
+        receiptCard.style.opacity = "0";
+        receiptCard.style.transform = "translateY(20px)";
+        
+        setTimeout(() => {
+          receiptCard.style.transition = "all 0.5s ease";
+          receiptCard.style.opacity = "1";
+          receiptCard.style.transform = "translateY(0)";
+        }, 100);
+
+        // Current date for receipt
+        const today = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = today.toLocaleDateString('en-US', options);
+        
+        // Set current date
+        const dateElements = document.querySelectorAll('.receipt-date');
+        if (dateElements.length > 0) {
+          dateElements[0].textContent = `Date: ${formattedDate}`;
+        }
+
+        // Generate random receipt number
+        const receiptIdElement = document.querySelector('.receipt-id');
+        if (receiptIdElement) {
+          const randomNum = Math.floor(1000 + Math.random() * 9000);
+          const year = today.getFullYear();
+          receiptIdElement.textContent = `Receipt #INV-${year}-${randomNum}`;
+        }
+      });
+    </script>
+  </body>
+</html>

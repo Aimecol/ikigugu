@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Sales | Business Management</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <link rel="stylesheet" href="../css/animations.css" />
+    <style>
+      /* Add Sales Page Specific Styles */
+      :root {
+        --primary-dark: #3a56d4; /* Darker shade for hover states */
+      }
+
+      .add-sales-container {
+        padding: 2rem;
+      }
+
+      .add-sales-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .form-card {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        animation: fadeIn 0.5s ease;
+        margin-bottom: 2rem;
+      }
+
+      .form-section {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--light);
+      }
+
+      .form-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .section-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--dark);
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid var(--primary-light);
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+      }
+
+      .form-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1em;
+      }
+
+      .btn-add-item {
+        padding: 0.5rem 1rem;
+        background: var(--primary-light);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+      }
+
+      .btn-add-item:hover {
+        background: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
+      }
+
+      .btn-remove-item {
+        color: var(--danger);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+      }
+
+      .btn-remove-item:hover {
+        background: rgba(239, 35, 60, 0.1);
+        transform: scale(1.1);
+      }
+
+      .items-list {
+        margin-top: 1rem;
+      }
+
+      .item-row {
+        display: grid;
+        grid-template-columns: 3fr 1fr 1fr 1fr auto;
+        gap: 1rem;
+        align-items: center;
+        padding: 1rem;
+        border-radius: 8px;
+        background: var(--light);
+        margin-bottom: 0.5rem;
+        animation: slideIn 0.3s ease;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .item-row:hover {
+        background: rgba(67, 97, 238, 0.05);
+      }
+
+      .item-total {
+        font-weight: 600;
+        color: var(--primary);
+      }
+
+      .summary-card {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        animation: fadeIn 0.5s ease;
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--light);
+      }
+
+      .summary-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .summary-label {
+        color: var(--gray);
+      }
+
+      .summary-value {
+        font-weight: 600;
+      }
+
+      .total-row {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 2px solid var(--primary-light);
+      }
+
+      .total-label {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--dark);
+      }
+
+      .total-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+      }
+
+      .btn-submit {
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .btn-submit:hover {
+        background: linear-gradient(to right, var(--secondary), var(--primary));
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(67, 97, 238, 0.3);
+      }
+
+      .btn-submit:active {
+        transform: translateY(0);
+      }
+
+      .payment-method-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .payment-method-option {
+        position: relative;
+      }
+
+      .payment-method-option input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .payment-method-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem 1rem;
+        border: 2px solid var(--light);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .payment-method-label i {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--gray);
+        transition: all 0.3s ease;
+      }
+
+      .payment-method-option input:checked + .payment-method-label {
+        border-color: var(--primary);
+        background: rgba(67, 97, 238, 0.05);
+      }
+
+      .payment-method-option input:checked + .payment-method-label i {
+        color: var(--primary);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .add-sales-container {
+          padding: 1rem;
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        .item-row {
+          grid-template-columns: 1fr;
+          gap: 0.5rem;
+        }
+
+        .item-row > div {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .item-row > div::before {
+          content: attr(data-label);
+          font-weight: 600;
+          color: var(--gray);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2><i class="fas fa-briefcase"></i> Ikigugu</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li>
+              <a href="../index.html"
+                ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="./clients.html"><i class="fas fa-users"></i> Clients</a>
+            </li>
+            <li>
+              <a href="./products.html"
+                ><i class="fas fa-boxes"></i> Products</a
+              >
+            </li>
+            <li class="active">
+              <a href="./sales.html"><i class="fas fa-chart-line"></i> Sales</a>
+            </li>
+            <li>
+              <a href="./students.html"
+                ><i class="fas fa-user-graduate"></i> Students</a
+              >
+            </li>
+            <li>
+              <a href="courses.html"
+                ><i class="fas fa-book-open"></i> Courses</a
+              >
+            </li>
+            <li>
+              <a href="./report.html"
+                ><i class="fas fa-file-alt"></i> Reports</a
+              >
+            </li>
+            <li>
+              <a href="employees.html"
+                ><i class="fas fa-user-tie"></i> Employees</a
+              >
+            </li>
+            <li>
+              <a href="./notifications.html"
+                ><i class="fas fa-bell"></i> Notifications</a
+              >
+            </li>
+            <li>
+              <a href="./profile.html"><i class="fas fa-user"></i> Profile</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="main-header">
+          <div class="header-left">
+            <h1>Add New Sale</h1>
+          </div>
+          <div class="header-right">
+            <div class="user-profile">
+              <img src="./Fab.jpg" alt="User" />
+              <span>Admin</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-wrapper add-sales-container">
+          <div class="add-sales-header">
+            <h2><i class="fas fa-plus-circle"></i> Create New Sale</h2>
+            <a href="sales.html" class="btn-add-item">
+              <i class="fas fa-arrow-left"></i> Back to Sales
+            </a>
+          </div>
+
+          <form id="add-sales-form">
+            <!-- Customer Information -->
+            <div class="form-card">
+              <div class="form-section">
+                <h3 class="section-title">
+                  <i class="fas fa-user"></i> Customer Information
+                </h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="customer" class="form-label">Select Customer</label>
+                    <select id="customer" class="form-control form-select" required>
+                      <option value="" selected disabled>Choose a customer</option>
+                      <option value="1">John Doe</option>
+                      <option value="2">Jane Smith</option>
+                      <option value="3">Robert Johnson</option>
+                      <option value="4">Sarah Williams</option>
+                      <option value="5">Michael Brown</option>
+                      <option value="new">+ Add New Customer</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="sale-date" class="form-label">Sale Date</label>
+                    <input
+                      type="date"
+                      id="sale-date"
+                      class="form-control"
+                      value="2023-08-01"
+                      required
+                    />
+                  </div>
+                </div>
+                <div id="new-customer-fields" style="display: none;">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="customer-name" class="form-label">Customer Name</label>
+                      <input type="text" id="customer-name" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                      <label for="customer-phone" class="form-label">Phone Number</label>
+                      <input type="tel" id="customer-phone" class="form-control" />
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="customer-email" class="form-label">Email Address</label>
+                      <input type="email" id="customer-email" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                      <label for="customer-address" class="form-label">Address</label>
+                      <input type="text" id="customer-address" class="form-control" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Items Section -->
+              <div class="form-section">
+                <h3 class="section-title">
+                  <i class="fas fa-shopping-cart"></i> Items & Services
+                </h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="item-type" class="form-label">Type</label>
+                    <select id="item-type" class="form-control form-select">
+                      <option value="product">Product</option>
+                      <option value="service">Service</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="item-name" class="form-label">Item Name</label>
+                    <select id="item-name" class="form-control form-select">
+                      <option value="" selected disabled>Select an item</option>
+                      <!-- Product options will be loaded here -->
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="item-quantity" class="form-label">Quantity</label>
+                    <input
+                      type="number"
+                      id="item-quantity"
+                      class="form-control"
+                      min="1"
+                      value="1"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="item-price" class="form-label">Price (RWF)</label>
+                    <input
+                      type="number"
+                      id="item-price"
+                      class="form-control"
+                      min="0"
+                      step="50"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <button type="button" id="add-item-btn" class="btn-add-item">
+                    <i class="fas fa-plus"></i> Add Item
+                  </button>
+                </div>
+
+                <!-- Items List -->
+                <div class="items-list" id="items-container">
+                  <!-- Items will be added here dynamically -->
+                </div>
+              </div>
+
+              <!-- Payment Information -->
+              <div class="form-section">
+                <h3 class="section-title">
+                  <i class="fas fa-money-bill-wave"></i> Payment Information
+                </h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="payment-status" class="form-label">Payment Status</label>
+                    <select id="payment-status" class="form-control form-select" required>
+                      <option value="paid">Paid</option>
+                      <option value="pending">Pending</option>
+                      <option value="partial">Partial Payment</option>
+                    </select>
+                  </div>
+                  <div class="form-group" id="partial-payment-field" style="display: none;">
+                    <label for="amount-paid" class="form-label">Amount Paid (RWF)</label>
+                    <input
+                      type="number"
+                      id="amount-paid"
+                      class="form-control"
+                      min="0"
+                      step="50"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Payment Method</label>
+                  <div class="payment-method-options">
+                    <div class="payment-method-option">
+                      <input
+                        type="radio"
+                        id="payment-cash"
+                        name="payment-method"
+                        value="cash"
+                        checked
+                      />
+                      <label for="payment-cash" class="payment-method-label">
+                        <i class="fas fa-money-bill-alt"></i>
+                        <span>Cash</span>
+                      </label>
+                    </div>
+                    <div class="payment-method-option">
+                      <input
+                        type="radio"
+                        id="payment-card"
+                        name="payment-method"
+                        value="card"
+                      />
+                      <label for="payment-card" class="payment-method-label">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Card</span>
+                      </label>
+                    </div>
+                    <div class="payment-method-option">
+                      <input
+                        type="radio"
+                        id="payment-mobile"
+                        name="payment-method"
+                        value="mobile"
+                      />
+                      <label for="payment-mobile" class="payment-method-label">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>Mobile Money</span>
+                      </label>
+                    </div>
+                    <div class="payment-method-option">
+                      <input
+                        type="radio"
+                        id="payment-bank"
+                        name="payment-method"
+                        value="bank"
+                      />
+                      <label for="payment-bank" class="payment-method-label">
+                        <i class="fas fa-university"></i>
+                        <span>Bank Transfer</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Notes Section -->
+              <div class="form-section">
+                <h3 class="section-title">
+                  <i class="fas fa-sticky-note"></i> Additional Notes
+                </h3>
+                <div class="form-group">
+                  <textarea
+                    id="sale-notes"
+                    class="form-control"
+                    rows="3"
+                    placeholder="Add any additional notes or comments about this sale"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="summary-card">
+              <h3 class="section-title">
+                <i class="fas fa-file-invoice"></i> Order Summary
+              </h3>
+              <div class="summary-row">
+                <span class="summary-label">Subtotal</span>
+                <span class="summary-value" id="subtotal">0 RWF</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Tax (18%)</span>
+                <span class="summary-value" id="tax">0 RWF</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Discount</span>
+                <div>
+                  <input
+                    type="number"
+                    id="discount"
+                    class="form-control"
+                    min="0"
+                    max="100"
+                    value="0"
+                    style="width: 80px; display: inline-block"
+                  />
+                  <span>%</span>
+                </div>
+              </div>
+              <div class="total-row">
+                <span class="total-label">Total Amount</span>
+                <span class="total-value" id="total">0 RWF</span>
+              </div>
+
+              <button type="submit" class="btn-submit">
+                <i class="fas fa-check-circle"></i> Complete Sale
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Sample product data
+        const products = [
+          { id: 1, name: "Laptop", price: 450000, type: "product", stock: 15 },
+          { id: 2, name: "Smartphone", price: 250000, type: "product", stock: 25 },
+          { id: 3, name: "Headphones", price: 35000, type: "product", stock: 40 },
+          { id: 4, name: "Monitor", price: 120000, type: "product", stock: 10 },
+          { id: 5, name: "Keyboard", price: 25000, type: "product", stock: 30 },
+          { id: 6, name: "Mouse", price: 15000, type: "product", stock: 45 },
+          { id: 7, name: "Printer", price: 180000, type: "product", stock: 8 },
+          { id: 8, name: "External Hard Drive", price: 75000, type: "product", stock: 20 },
+        ];
+
+        // Sample service data
+        const services = [
+          { id: 101, name: "Website Development", price: 300000, type: "service" },
+          { id: 102, name: "Graphic Design", price: 50000, type: "service" },
+          { id: 103, name: "IT Consultation", price: 75000, type: "service" },
+          { id: 104, name: "Data Recovery", price: 45000, type: "service" },
+          { id: 105, name: "Network Setup", price: 85000, type: "service" },
+          { id: 106, name: "Software Installation", price: 25000, type: "service" },
+          { id: 107, name: "Computer Repair", price: 40000, type: "service" },
+          { id: 108, name: "Cloud Migration", price: 120000, type: "service" },
+        ];
+
+        // DOM elements
+        const itemTypeSelect = document.getElementById("item-type");
+        const itemNameSelect = document.getElementById("item-name");
+        const itemPriceInput = document.getElementById("item-price");
+        const itemQuantityInput = document.getElementById("item-quantity");
+        const addItemBtn = document.getElementById("add-item-btn");
+        const itemsContainer = document.getElementById("items-container");
+        const customerSelect = document.getElementById("customer");
+        const newCustomerFields = document.getElementById("new-customer-fields");
+        const paymentStatusSelect = document.getElementById("payment-status");
+        const partialPaymentField = document.getElementById("partial-payment-field");
+        const amountPaidInput = document.getElementById("amount-paid");
+        const discountInput = document.getElementById("discount");
+        const subtotalElement = document.getElementById("subtotal");
+        const taxElement = document.getElementById("tax");
+        const totalElement = document.getElementById("total");
+        const salesForm = document.getElementById("add-sales-form");
+        const saleNotesTextarea = document.getElementById("sale-notes");
+
+        // Track selected items to prevent duplicates
+        const selectedItems = new Map();
+        
+        // Initialize with product options
+        populateItemOptions("product");
+
+        // Event: Change item type
+        itemTypeSelect.addEventListener("change", function () {
+          populateItemOptions(this.value);
+          itemPriceInput.value = ""; // Clear price when type changes
+        });
+
+        // Event: Select an item
+        itemNameSelect.addEventListener("change", function () {
+          const selectedType = itemTypeSelect.value;
+          const selectedId = parseInt(this.value);
+          let selectedItem;
+
+          if (selectedType === "product") {
+            selectedItem = products.find((p) => p.id === selectedId);
+            
+            // Update quantity max based on stock
+            if (selectedItem) {
+              itemQuantityInput.max = selectedItem.stock;
+              // Show stock information
+              const stockInfo = document.createElement("small");
+              stockInfo.className = "stock-info";
+              stockInfo.textContent = `Available: ${selectedItem.stock} units`;
+              
+              // Remove any existing stock info
+              const existingStockInfo = itemQuantityInput.parentElement.querySelector(".stock-info");
+              if (existingStockInfo) {
+                existingStockInfo.remove();
+              }
+              
+              itemQuantityInput.parentElement.appendChild(stockInfo);
+            }
+          } else {
+            selectedItem = services.find((s) => s.id === selectedId);
+            // Remove any existing stock info for services
+            const existingStockInfo = itemQuantityInput.parentElement.querySelector(".stock-info");
+            if (existingStockInfo) {
+              existingStockInfo.remove();
+            }
+          }
+
+          if (selectedItem) {
+            itemPriceInput.value = selectedItem.price;
+            // Highlight the price field with a subtle animation
+            itemPriceInput.classList.add("highlight");
+            setTimeout(() => {
+              itemPriceInput.classList.remove("highlight");
+            }, 1000);
+          }
+        });
+
+        // Event: Add item to list
+        addItemBtn.addEventListener("click", function () {
+          const selectedType = itemTypeSelect.value;
+          const selectedId = parseInt(itemNameSelect.value);
+          const quantity = parseInt(itemQuantityInput.value);
+          const price = parseFloat(itemPriceInput.value);
+
+          if (!selectedId || isNaN(selectedId)) {
+            showNotification("Please select an item", "error");
+            itemNameSelect.focus();
+            return;
+          }
+
+          if (isNaN(quantity) || quantity < 1) {
+            showNotification("Please enter a valid quantity", "error");
+            itemQuantityInput.focus();
+            return;
+          }
+
+          if (isNaN(price) || price <= 0) {
+            showNotification("Please enter a valid price", "error");
+            itemPriceInput.focus();
+            return;
+          }
+
+          let selectedItem;
+          if (selectedType === "product") {
+            selectedItem = products.find((p) => p.id === selectedId);
+            
+            // Check if there's enough stock
+            if (selectedItem && quantity > selectedItem.stock) {
+              showNotification(`Only ${selectedItem.stock} units available in stock`, "error");
+              return;
+            }
+          } else {
+            selectedItem = services.find((s) => s.id === selectedId);
+          }
+
+          if (!selectedItem) return;
+          
+          // Check if item already exists in the list
+          const itemKey = `${selectedType}-${selectedId}`;
+          if (selectedItems.has(itemKey)) {
+            showNotification("This item is already in your list", "warning");
+            return;
+          }
+          
+          // Add to selected items map
+          selectedItems.set(itemKey, { id: selectedId, type: selectedType, quantity });
+
+          const total = quantity * price;
+          addItemToList(selectedItem.name, selectedType, quantity, price, total, itemKey);
+          updateOrderSummary();
+
+          // Reset fields
+          itemNameSelect.selectedIndex = 0;
+          itemQuantityInput.value = 1;
+          itemPriceInput.value = "";
+          
+          // Remove stock info
+          const existingStockInfo = itemQuantityInput.parentElement.querySelector(".stock-info");
+          if (existingStockInfo) {
+            existingStockInfo.remove();
+          }
+          
+          showNotification("Item added to sale", "success");
+        });
+
+        // Event: Customer selection change
+        customerSelect.addEventListener("change", function () {
+          if (this.value === "new") {
+            newCustomerFields.style.display = "block";
+            newCustomerFields.classList.add("animate-fade-in");
+            // Focus on the first field
+            setTimeout(() => {
+              document.getElementById("customer-name").focus();
+            }, 300);
+          } else {
+            newCustomerFields.style.display = "none";
+          }
+        });
+
+        // Event: Payment status change
+        paymentStatusSelect.addEventListener("change", function () {
+          if (this.value === "partial") {
+            partialPaymentField.style.display = "block";
+            partialPaymentField.classList.add("animate-fade-in");
+            setTimeout(() => {
+              amountPaidInput.focus();
+            }, 300);
+          } else {
+            partialPaymentField.style.display = "none";
+          }
+        });
+
+        // Event: Amount paid validation for partial payment
+        amountPaidInput.addEventListener("input", function() {
+          const totalAmount = parseFloat(totalElement.textContent.replace(/[^0-9.-]+/g, ""));
+          const amountPaid = parseFloat(this.value) || 0;
+          
+          if (amountPaid <= 0) {
+            this.setCustomValidity("Amount must be greater than zero");
+          } else if (amountPaid >= totalAmount) {
+            this.setCustomValidity("For partial payment, amount should be less than total");
+          } else {
+            this.setCustomValidity("");
+          }
+          
+          this.reportValidity();
+        });
+
+        // Event: Discount change with validation
+        discountInput.addEventListener("input", function() {
+          const value = parseFloat(this.value) || 0;
+          
+          if (value < 0) {
+            this.value = 0;
+          } else if (value > 100) {
+            this.value = 100;
+          }
+          
+          updateOrderSummary();
+        });
+
+        // Event: Form submission
+        salesForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          
+          // Validate if items exist
+          if (itemsContainer.children.length === 0) {
+            showNotification("Please add at least one item to the sale", "error");
+            return;
+          }
+          
+          // Validate customer information
+          if (customerSelect.value === "new") {
+            const customerName = document.getElementById("customer-name").value.trim();
+            const customerPhone = document.getElementById("customer-phone").value.trim();
+            
+            if (!customerName) {
+              showNotification("Please enter customer name", "error");
+              document.getElementById("customer-name").focus();
+              return;
+            }
+            
+            if (!customerPhone) {
+              showNotification("Please enter customer phone number", "error");
+              document.getElementById("customer-phone").focus();
+              return;
+            }
+          }
+          
+          // Validate partial payment if selected
+          if (paymentStatusSelect.value === "partial") {
+            const amountPaid = parseFloat(amountPaidInput.value) || 0;
+            const totalAmount = parseFloat(totalElement.textContent.replace(/[^0-9.-]+/g, ""));
+            
+            if (amountPaid <= 0) {
+              showNotification("Please enter a valid amount paid", "error");
+              amountPaidInput.focus();
+              return;
+            }
+            
+            if (amountPaid >= totalAmount) {
+              showNotification("For partial payment, amount should be less than total", "error");
+              amountPaidInput.focus();
+              return;
+            }
+          }
+
+          // Collect all sale data
+          const saleData = collectSaleData();
+          console.log("Sale Data:", saleData);
+          
+          // Show loading state
+          const submitBtn = this.querySelector(".btn-submit");
+          const originalBtnText = submitBtn.innerHTML;
+          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+          submitBtn.disabled = true;
+          
+          // Simulate server request
+          setTimeout(() => {
+            // In a real application, you would send this data to the server
+            showNotification("Sale completed successfully!", "success");
+            
+            // Reset form or redirect
+            setTimeout(() => {
+              window.location.href = "sales.html";
+            }, 1000);
+          }, 1500);
+        });
+
+        // Function: Collect all sale data
+        function collectSaleData() {
+          // Get customer info
+          let customer;
+          if (customerSelect.value === "new") {
+            customer = {
+              name: document.getElementById("customer-name").value.trim(),
+              phone: document.getElementById("customer-phone").value.trim(),
+              email: document.getElementById("customer-email").value.trim(),
+              address: document.getElementById("customer-address").value.trim(),
+              isNew: true
+            };
+          } else {
+            customer = {
+              id: customerSelect.value,
+              isNew: false
+            };
+          }
+          
+          // Get items
+          const items = [];
+          itemsContainer.querySelectorAll(".item-row").forEach(row => {
+            const name = row.querySelector("[data-label='Item']").textContent.split(" ")[0];
+            const type = row.querySelector(".badge").textContent;
+            const quantity = parseInt(row.querySelector("[data-label='Quantity']").textContent);
+            const price = parseFloat(row.querySelector("[data-label='Price']").textContent.replace(/[^0-9.-]+/g, ""));
+            const total = parseFloat(row.querySelector(".item-total").textContent.replace(/[^0-9.-]+/g, ""));
+            
+            items.push({ name, type, quantity, price, total });
+          });
+          
+          // Get payment info
+          const paymentStatus = paymentStatusSelect.value;
+          let amountPaid = 0;
+          const totalAmount = parseFloat(totalElement.textContent.replace(/[^0-9.-]+/g, ""));
+          
+          if (paymentStatus === "paid") {
+            amountPaid = totalAmount;
+          } else if (paymentStatus === "partial") {
+            amountPaid = parseFloat(amountPaidInput.value) || 0;
+          }
+          
+          const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+          
+          // Get summary values
+          const subtotal = parseFloat(subtotalElement.textContent.replace(/[^0-9.-]+/g, ""));
+          const tax = parseFloat(taxElement.textContent.replace(/[^0-9.-]+/g, ""));
+          const discount = parseFloat(discountInput.value) || 0;
+          
+          // Return complete sale data object
+          return {
+            date: document.getElementById("sale-date").value,
+            customer,
+            items,
+            payment: {
+              status: paymentStatus,
+              method: paymentMethod,
+              amountPaid,
+              balance: totalAmount - amountPaid
+            },
+            summary: {
+              subtotal,
+              tax,
+              discount,
+              total: totalAmount
+            },
+            notes: saleNotesTextarea.value.trim(),
+            createdAt: new Date().toISOString()
+          };
+        }
+
+        // Function: Populate item options based on type
+        function populateItemOptions(type) {
+          // Clear existing options
+          itemNameSelect.innerHTML = '<option value="" selected disabled>Select an item</option>';
+          
+          // Add new options based on type
+          const items = type === "product" ? products : services;
+          
+          items.forEach(item => {
+            // Skip items that are already in the list
+            const itemKey = `${type}-${item.id}`;
+            if (selectedItems.has(itemKey)) return;
+            
+            const option = document.createElement("option");
+            option.value = item.id;
+            option.textContent = item.name;
+            
+            // Add stock info for products
+            if (type === "product") {
+              option.textContent += ` (${item.stock} in stock)`;
+              
+              // Disable option if out of stock
+              if (item.stock <= 0) {
+                option.disabled = true;
+                option.textContent += " - Out of Stock";
+              }
+            }
+            
+            itemNameSelect.appendChild(option);
+          });
+        }
+
+        // Function: Add item to the list
+        function addItemToList(name, type, quantity, price, total, itemKey) {
+          const itemRow = document.createElement("div");
+          itemRow.className = "item-row";
+          itemRow.dataset.itemKey = itemKey;
+          itemRow.innerHTML = `
+            <div data-label="Item">${name} <span class="badge">${type}</span></div>
+            <div data-label="Quantity">${quantity}</div>
+            <div data-label="Price">${price.toLocaleString()} RWF</div>
+            <div data-label="Total" class="item-total">${total.toLocaleString()} RWF</div>
+            <button type="button" class="btn-remove-item" title="Remove Item"><i class="fas fa-times"></i></button>
+          `;
+
+          // Add event listener to remove button
+          const removeBtn = itemRow.querySelector(".btn-remove-item");
+          removeBtn.addEventListener("click", function() {
+            // Remove from selected items map
+            selectedItems.delete(itemKey);
+            
+            // Animate removal
+            itemRow.classList.add("animate-fade-out");
+            setTimeout(() => {
+              itemsContainer.removeChild(itemRow);
+              updateOrderSummary();
+              
+              // Refresh item options to show removed item again
+              populateItemOptions(itemTypeSelect.value);
+            }, 300);
+          });
+
+          // Add with animation
+          itemRow.style.opacity = "0";
+          itemRow.style.transform = "translateY(-10px)";
+          itemsContainer.appendChild(itemRow);
+          
+          // Trigger animation
+          setTimeout(() => {
+            itemRow.style.opacity = "1";
+            itemRow.style.transform = "translateY(0)";
+          }, 10);
+        }
+
+        // Function: Update order summary
+        function updateOrderSummary() {
+          // Calculate subtotal from all items
+          let subtotal = 0;
+          const itemRows = itemsContainer.querySelectorAll(".item-row");
+          
+          itemRows.forEach(row => {
+            const totalText = row.querySelector(".item-total").textContent;
+            const totalValue = parseFloat(totalText.replace(/[^0-9.-]+/g, ""));
+            subtotal += totalValue;
+          });
+
+          // Calculate tax and total
+          const discountPercentage = parseFloat(discountInput.value) || 0;
+          const discountAmount = (subtotal * discountPercentage) / 100;
+          const taxRate = 0.18; // 18%
+          const taxAmount = (subtotal - discountAmount) * taxRate;
+          const total = subtotal - discountAmount + taxAmount;
+
+          // Update display with animation
+          animateValue(subtotalElement, subtotal);
+          animateValue(taxElement, taxAmount);
+          animateValue(totalElement, total);
+        }
+        
+        // Function: Animate value change
+        function animateValue(element, newValue) {
+          const currentValue = parseFloat(element.textContent.replace(/[^0-9.-]+/g, "")) || 0;
+          const startTime = performance.now();
+          const duration = 500; // ms
+          
+          function updateValue(timestamp) {
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Easing function for smooth animation
+            const easeOutQuad = progress * (2 - progress);
+            
+            const currentVal = currentValue + (newValue - currentValue) * easeOutQuad;
+            element.textContent = `${Math.round(currentVal).toLocaleString()} RWF`;
+            
+            if (progress < 1) {
+              requestAnimationFrame(updateValue);
+            }
+          }
+          
+          requestAnimationFrame(updateValue);
+        }
+        
+        // Function: Show notification
+        function showNotification(message, type = "info") {
+          // Create notification element
+          const notification = document.createElement("div");
+          notification.className = `notification notification-${type}`;
+          notification.innerHTML = `
+            <div class="notification-icon">
+              <i class="fas ${type === 'success' ? 'fa-check-circle' : 
+                             type === 'error' ? 'fa-exclamation-circle' : 
+                             type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i>
+            </div>
+            <div class="notification-message">${message}</div>
+          `;
+          
+          // Add styles if not already in document
+          if (!document.getElementById("notification-styles")) {
+            const style = document.createElement("style");
+            style.id = "notification-styles";
+            style.textContent = `
+              .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                display: flex;
+                align-items: center;
+                padding: 12px 20px;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                z-index: 1000;
+                transform: translateX(120%);
+                transition: transform 0.3s ease;
+                max-width: 350px;
+              }
+              .notification.show {
+                transform: translateX(0);
+              }
+              .notification-icon {
+                margin-right: 12px;
+                font-size: 1.2rem;
+              }
+              .notification-success .notification-icon {
+                color: var(--success, #28a745);
+              }
+              .notification-error .notification-icon {
+                color: var(--danger, #dc3545);
+              }
+              .notification-warning .notification-icon {
+                color: var(--warning, #ffc107);
+              }
+              .notification-info .notification-icon {
+                color: var(--primary, #4361ee);
+              }
+              .notification-message {
+                font-weight: 500;
+              }
+              .highlight {
+                animation: highlight-pulse 1s ease;
+              }
+              @keyframes highlight-pulse {
+                0%, 100% { background-color: transparent; }
+                50% { background-color: rgba(67, 97, 238, 0.1); }
+              }
+            `;
+            document.head.appendChild(style);
+          }
+          
+          // Add to document
+          document.body.appendChild(notification);
+          
+          // Show with animation
+          setTimeout(() => notification.classList.add("show"), 10);
+          
+          // Remove after delay
+          setTimeout(() => {
+            notification.classList.remove("show");
+            setTimeout(() => document.body.removeChild(notification), 300);
+          }, 3000);
+        }
+        
+        // Add animation classes
+        document.querySelectorAll(".form-card, .summary-card").forEach((card, index) => {
+          setTimeout(() => {
+            card.style.opacity = "1";
+            card.style.transform = "translateY(0)";
+          }, index * 100);
+        });
+
+        // Initialize with current date
+        document.getElementById("sale-date").valueAsDate = new Date();
+        // Populate item options on load
+        populateItemOptions(itemTypeSelect.value);
+      });
+    </script>
+  </body>
+</html>

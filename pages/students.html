@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Internship Students | Business Management</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <style>
+      /* Students Page Specific Styles */
+      .students-container {
+        padding: 2rem;
+      }
+
+      .students-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .header-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .search-filter-container {
+        display: flex;
+        flex-grow: 1;
+        gap: 1rem;
+        max-width: 700px;
+        flex-wrap: wrap;
+      }
+
+      .search-container {
+        position: relative;
+        flex-grow: 1;
+        max-width: 400px;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary);
+        transition: all 0.3s ease;
+      }
+
+      .search-bar {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 3rem;
+        border: 2px solid var(--primary-light);
+        border-radius: 50px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .search-bar:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+      }
+
+      .search-bar:focus + .search-icon {
+        color: var(--primary-dark);
+      }
+
+      .filter-container {
+        position: relative;
+        min-width: 180px;
+      }
+
+      .filter-select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid var(--primary-light);
+        border-radius: 50px;
+        font-size: 1rem;
+        appearance: none;
+        background: rgba(255, 255, 255, 0.9);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .filter-select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+      }
+
+      .filter-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary);
+        pointer-events: none;
+      }
+
+      .add-student-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(67, 97, 238, 0.2);
+      }
+
+      .add-student-btn:hover {
+        background: var(--primary-dark);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(67, 97, 238, 0.3);
+      }
+
+      .add-student-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(67, 97, 238, 0.2);
+      }
+
+      .students-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .student-card {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        position: relative;
+        animation: fadeIn 0.5s ease;
+        overflow: hidden;
+      }
+
+      .student-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .student-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: var(--primary);
+        transition: all 0.3s ease;
+      }
+
+      .student-card:hover::before {
+        width: 7px;
+      }
+
+      .student-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .student-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--primary-light);
+        transition: all 0.3s ease;
+      }
+
+      .student-card:hover .student-avatar {
+        transform: scale(1.05);
+        border-color: var(--primary);
+      }
+
+      .student-info {
+        flex: 1;
+        margin-left: 1rem;
+      }
+
+      .student-name {
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 0.25rem;
+      }
+
+      .student-course {
+        color: var(--primary);
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      .student-actions {
+        position: relative;
+      }
+
+      .action-toggle {
+        background: none;
+        border: none;
+        color: var(--gray);
+        cursor: pointer;
+        font-size: 1.2rem;
+        padding: 0.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .action-toggle:hover {
+        color: var(--primary);
+      }
+
+      .action-menu {
+        position: absolute;
+        right: 0;
+        top: 100%;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 0.5rem 0;
+        min-width: 150px;
+        z-index: 10;
+        opacity: 0;
+        transform: translateY(-10px);
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .action-menu.show {
+        opacity: 1;
+        transform: translateY(0);
+        visibility: visible;
+      }
+
+      .action-btn {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 1rem;
+        text-align: left;
+        background: none;
+        border: none;
+        color: var(--dark);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .action-btn:hover {
+        background: rgba(67, 97, 238, 0.1);
+        color: var(--primary);
+      }
+
+      .action-btn.delete:hover {
+        color: var(--danger);
+      }
+
+      .student-details {
+        margin-top: 1rem;
+      }
+
+      .student-detail {
+        display: flex;
+        margin-bottom: 0.5rem;
+      }
+
+      .student-detail i {
+        color: var(--primary);
+        margin-right: 0.5rem;
+        width: 20px;
+        text-align: center;
+      }
+
+      .student-detail span {
+        color: var(--dark);
+      }
+
+      /* Pagination Styles */
+      .pagination-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+      }
+
+      .pagination {
+        display: flex;
+        list-style: none;
+        gap: 0.5rem;
+      }
+
+      .pagination li {
+        display: inline-block;
+      }
+
+      .pagination a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: white;
+        color: var(--dark);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .pagination a:hover {
+        background: var(--primary-light);
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .pagination .active a {
+        background: var(--primary);
+        color: white;
+      }
+
+      /* Course Statistics */
+      .course-stats {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .stat-card {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .stat-bar {
+        height: 8px;
+        background: var(--primary-light);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .stat-bar::after {
+        content: "";
+        display: block;
+        height: 100%;
+        width: 0%;
+        background: var(--primary);
+        transition: width 0.5s ease;
+      }
+
+      .stat-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+      }
+
+      .stat-course {
+        color: var(--dark);
+      }
+
+      .stat-count {
+        color: var(--primary);
+        font-weight: 500;
+      }
+
+      /* Empty state */
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      .empty-state i {
+        font-size: 3rem;
+        color: var(--gray);
+        margin-bottom: 1rem;
+      }
+
+      .empty-state h3 {
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+      }
+
+      .empty-state p {
+        color: var(--gray);
+        margin-bottom: 1.5rem;
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Responsive Styles */
+      @media (max-width: 768px) {
+        .students-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .students-header {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .search-filter-container {
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2><i class="fas fa-briefcase"></i> Ikigugu</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li>
+              <a href="../index.html"
+                ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="./clients.html"><i class="fas fa-users"></i> Clients</a>
+            </li>
+            <li>
+              <a href="./products.html"
+                ><i class="fas fa-boxes"></i> Products</a
+              >
+            </li>
+            <li>
+              <a href="./sales.html"><i class="fas fa-chart-line"></i> Sales</a>
+            </li>
+            <li class="active">
+              <a href="./students.html"
+                ><i class="fas fa-user-graduate"></i> Students</a
+              >
+            </li>
+            <li>
+              <a href="courses.html"
+                ><i class="fas fa-book-open"></i> Courses</a
+              >
+            </li>
+            <li>
+              <a href="./report.html"
+                ><i class="fas fa-file-alt"></i> Reports</a
+              >
+            </li>
+            <li>
+              <a href="employees.html"
+                ><i class="fas fa-user-tie"></i> Employees</a
+              >
+            </li>
+            <li>
+              <a href="./notifications.html"
+                ><i class="fas fa-bell"></i> Notifications</a
+              >
+            </li>
+            <li>
+              <a href="./profile.html"><i class="fas fa-user"></i> Profile</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="main-header">
+          <div class="header-left">
+            <h1>Internship Students</h1>
+          </div>
+          <div class="header-right">
+            <div class="user-profile">
+              <img src="../images/new.jpg" alt="User" />
+              <span>Admin</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-wrapper students-container">
+          <div class="students-header">
+            <div class="header-title">
+              <h2><i class="fas fa-user-graduate"></i> Student List</h2>
+            </div>
+            <div class="search-filter-container">
+              <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input
+                  type="text"
+                  class="search-bar"
+                  placeholder="Search students..."
+                  id="studentSearch"
+                />
+              </div>
+              <div class="filter-container">
+                <select class="filter-select" id="courseFilter">
+                  <option value="all">All Courses</option>
+                  <option value="web-development">Web Development</option>
+                  <option value="data-science">Data Science</option>
+                  <option value="ui-ux-design">UI/UX Design</option>
+                  <option value="mobile-development">Mobile Development</option>
+                  <option value="cybersecurity">Cybersecurity</option>
+                </select>
+                <i class="fas fa-filter filter-icon"></i>
+              </div>
+            </div>
+            <button
+              class="add-student-btn"
+              onclick="document.location.href = 'add-student.html';"
+            >
+              <i class="fas fa-plus"></i>
+              Add Student
+            </button>
+          </div>
+
+          <!-- Course Statistics -->
+          <div class="course-stats">
+            <h3><i class="fas fa-chart-pie"></i> Course Distribution</h3>
+            <div class="stats-grid">
+              <div class="stat-card" data-course="web-development">
+                <div class="stat-bar"></div>
+                <div class="stat-info">
+                  <span class="stat-course">Web Development</span>
+                  <span class="stat-count">0 students</span>
+                </div>
+              </div>
+              <div class="stat-card" data-course="data-science">
+                <div class="stat-bar"></div>
+                <div class="stat-info">
+                  <span class="stat-course">Data Science</span>
+                  <span class="stat-count">0 students</span>
+                </div>
+              </div>
+              <div class="stat-card" data-course="ui-ux-design">
+                <div class="stat-bar"></div>
+                <div class="stat-info">
+                  <span class="stat-course">UI/UX Design</span>
+                  <span class="stat-count">0 students</span>
+                </div>
+              </div>
+              <div class="stat-card" data-course="mobile-development">
+                <div class="stat-bar"></div>
+                <div class="stat-info">
+                  <span class="stat-course">Mobile Development</span>
+                  <span class="stat-count">0 students</span>
+                </div>
+              </div>
+              <div class="stat-card" data-course="cybersecurity">
+                <div class="stat-bar"></div>
+                <div class="stat-info">
+                  <span class="stat-course">Cybersecurity</span>
+                  <span class="stat-count">0 students</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="students-grid" id="studentsGrid">
+            <!-- Static student cards -->
+            <div class="student-card" data-student-id="1">
+              <div class="student-header">
+                <div style="display: flex; align-items: center">
+                  <img
+                    src="../images/new.jpg"
+                    alt="John Doe"
+                    class="student-avatar"
+                    onerror="this.src='./default-avatar.jpg'"
+                  />
+                  <div class="student-info">
+                    <div class="student-name">John Doe</div>
+                    <div class="student-course">Web Development</div>
+                  </div>
+                </div>
+                <div class="student-actions">
+                  <button class="action-toggle" aria-label="Student options">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                  <div class="action-menu">
+                    <button class="action-btn">
+                      <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="action-btn delete">
+                      <i class="fas fa-trash"></i> Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="student-details">
+                <div class="student-detail">
+                  <i class="fas fa-envelope"></i>
+                  <span class="student-email">john.doe@example.com</span>
+                </div>
+                <div class="student-detail">
+                  <i class="fas fa-phone"></i>
+                  <span class="student-phone">+1 (555) 123-4567</span>
+                </div>
+                <div class="student-detail">
+                  <i class="fas fa-university"></i>
+                  <span>Tech University</span>
+                </div>
+                <div class="student-detail">
+                  <i class="fas fa-calendar"></i>
+                  <span>Period: Jan 15, 2023 - Jul 15, 2023</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="student-card" data-student-id="2">
+              <div class="student-header">
+                <div style="display: flex; align-items: center">
+                  <img
+                    src="../images/new.jpg"
+                    alt="Jane Smith"
+                    class="student-avatar"
+                    onerror="this.src='./default-avatar.jpg'"
+                  />
+                  <div class="student-info">
+                    <div class="student-name">Jane Smith</div>
+                    <div class="student-course">Data Science</div>
+                  </div>
+                </div>
+                <div class="student-actions">
+                  <button class="action-toggle" aria-label="Student options">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                  <div class="action-menu">
+                    <button class="action-btn">
+                      <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="action-btn delete">
+                      <i class="fas fa-trash"></i> Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="student-details">
+                <div class="student-detail">
+                  <i class="fas fa-envelope"></i>
+                  <span class="student-email">jane.smith@example.com</span>
+                </div>
+                <div class="student-detail">
+                  <i class="fas fa-phone"></i>
+                  <span class="student-phone">+1 (555) 987-6543</span>
+                </div>
+                <div class="student-detail">
+                  <i class="fas fa-university"></i>
+                  <span>Data Analytics College</span>
+                </div>
+                <div class="student-detail">
+                  <i class="fas fa-calendar"></i>
+                  <span>Period: Feb 1, 2023 - Aug 1, 2023</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="student-card" data-student-id="3">
+              <div class="student-header">
+                <div style="display: flex; align-items: center">
+                  <img
+                    src="../images/new.jpg"
+                    alt="Michael Johnson"
+                    class="student-avatar"
+                    onerror="this.src='./default-avatar.jpg'"
+                  />
+                  <div class="student-info">
+                    <div class="student-name">John Doe</div>
+                    <div class="student-course">Web Development</div>
+                  </div>
+                </div>
+                <div class="student-actions">
+                  <button class="action-toggle" aria-label="Student options">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                  <div class="action-menu">
+                    <button class="action-btn">
+                      <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="action-btn delete">
+                      <i class="fas fa-trash"></i> Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="student-details">
+                <div class="student-detail">
+                  <i class="fas fa-envelope"></i>
+                  <span class="student-email">john.doe@example.com</span>
+                </div>
+                <div class="student-detail">
+                  <i class="fas fa-phone"></i>
+                  <span class="student-phone">+1 (555) 123-4567</span>
+                </div>
+                <div class="student-detail">
+                  <i class="fas fa-university"></i>
+                  <span>Tech University</span>
+                </div>
+                <div class="student-detail">
+                  <i class="fas fa-calendar"></i>
+                  <span>Period: Jan 15, 2023 - Jul 15, 2023</span>
+                </div>
+              </div>
+            </div>
+            <!-- Add more static student cards here -->
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination-container">
+            <ul class="pagination" id="pagination">
+              <!-- Pagination will be dynamically generated -->
+            </ul>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+    <script src="../js/students.js" defer></script>
+  </body>
+</html>

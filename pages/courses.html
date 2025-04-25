@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Courses | Ikigugu</title>
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <link rel="stylesheet" href="../css/animations.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .courses-container {
+        padding: 2rem;
+      }
+
+      .courses-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .search-filter {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .search-box {
+        flex: 1;
+        position: relative;
+      }
+
+      .search-box input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        border: 1px solid var(--light);
+        border-radius: 8px;
+        font-size: 1rem;
+      }
+
+      .search-box i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray);
+      }
+
+      .courses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .course-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+      }
+
+      .course-image {
+        height: 180px;
+        background-color: var(--light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+
+      .course-actions {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 10;
+        font-size: 0.5rerm;
+      }
+
+      .action-menu {
+        position: absolute;
+        right: 0;
+        top: 100%;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        display: none;
+        min-width: 120px;
+      }
+
+      .action-menu.show {
+        display: block;
+      }
+
+      .action-btn {
+        display: flex;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        text-align: left;
+        background: none;
+        border: none;
+        color: var(--dark);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        gap: 0.5rem;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .action-btn:hover {
+        background: var(--light);
+      }
+
+      .action-btn > i {
+        font-size: 0;
+      }
+
+      #action-icon {
+        font-size: 1rem;
+      }
+
+      .action-trigger {
+        background: none;
+        border: none;
+        color: var(--gray);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .action-trigger:hover {
+        color: var(--primary);
+      }
+
+      .course-image i {
+        font-size: 3rem;
+        color: var(--gray-light);
+      }
+
+      .course-details {
+        padding: 1.5rem;
+      }
+
+      .course-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+      }
+
+      .course-description {
+        font-size: 0.9375rem;
+        color: var(--gray-dark);
+        margin-bottom: 1.5rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .course-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+      }
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--gray);
+      }
+
+      .course-price {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--primary);
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        flex: 1;
+        text-align: center;
+      }
+
+      .btn-primary {
+        background-color: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-dark);
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        border: 1px solid var(--light);
+        color: var(--dark);
+      }
+
+      .btn-outline:hover {
+        background-color: var(--light);
+      }
+
+      @media (max-width: 768px) {
+        .courses-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .search-filter {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .filter-dropdown {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar would be included here -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2><i class="fas fa-briefcase"></i> Ikigugu</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li>
+              <a href="../index.html"
+                ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="clients.html"><i class="fas fa-users"></i> Clients</a>
+            </li>
+            <li>
+              <a href="./products.html"
+                ><i class="fas fa-boxes"></i> Products</a
+              >
+            </li>
+            <li>
+              <a href="sales.html"><i class="fas fa-chart-line"></i> Sales</a>
+            </li>
+            <li>
+              <a href="students.html"
+                ><i class="fas fa-user-graduate"></i> Students</a
+              >
+            </li>
+            <li class="active">
+              <a href="courses.html"
+                ><i class="fas fa-book-open"></i> Courses</a
+              >
+            </li>
+            <li>
+              <a href="report.html"><i class="fas fa-file-alt"></i> Reports</a>
+            </li>
+            <li>
+              <a href="employees.html"
+                ><i class="fas fa-user-tie"></i> Employees</a
+              >
+            </li>
+            <li>
+              <a href="./notifications.html"
+                ><i class="fas fa-bell"></i> Notifications</a
+              >
+            </li>
+            <li>
+              <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <header class="main-header">
+          <div class="header-left">
+            <h1>Courses</h1>
+          </div>
+          <div class="header-right">
+            <div class="user-profile">
+              <img src="../images/new.jpg" alt="User" />
+              <span>Admin</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </header>
+
+        <div class="courses-container">
+          <div class="courses-header">
+            <h2><i class="fas fa-book-open mr-2"></i>Available Courses</h2>
+            <a
+              href="add-course.html"
+              class="btn btn-primary"
+              style="
+                padding: 0.75rem 1rem;
+                border-radius: 50px;
+                font-weight: 600;
+                max-width: 200px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: .5rem;
+              "
+            >
+              <i class="fas fa-plus mr-2"></i>Add New Course
+            </a>
+          </div>
+
+          <div class="search-filter">
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input type="text" placeholder="Search courses..." />
+            </div>
+          </div>
+
+          <div class="courses-grid">
+            <!-- Sample Course Card 1 -->
+            <div class="course-card">
+              <div class="course-image">
+                <img
+                  src="../images/new.jpg"
+                  alt="Web Development"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                <div class="course-actions">
+                  <button class="action-trigger">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                  <div class="action-menu">
+                    <button class="action-btn">
+                      <i class="fas fa-edit" id="action-icon"></i> Edit
+                    </button>
+                    <button class="action-btn">
+                      <i class="fas fa-trash" id="action-icon"></i> Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="course-details">
+                <h3 class="course-title">Web Development Fundamentals</h3>
+
+                <p class="course-description">
+                  Learn the basics of HTML, CSS and JavaScript to build your
+                  first website.
+                </p>
+                <div class="course-meta">
+                  <span class="meta-item">
+                    <i class="fas fa-clock"></i> 12 weeks
+                  </span>
+                  <span class="meta-item">
+                    <i class="fas fa-user-graduate"></i> 24 students
+                  </span>
+                </div>
+                <div class="course-price">299,000 RWF</div>
+              </div>
+            </div>
+
+            <!-- Sample Course Card 2 -->
+            <div class="course-card">
+              <div class="course-image">
+                <img
+                  src="../images/new.jpg"
+                  alt="UI/UX Design"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                <div class="course-actions">
+                  <button class="action-trigger">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                  <div class="action-menu">
+                    <button class="action-btn">
+                      <i class="fas fa-edit" id="action-icon"></i> Edit
+                    </button>
+                    <button class="action-btn">
+                      <i class="fas fa-trash" id="action-icon"></i> Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="course-details">
+                <h3 class="course-title">UI/UX Design Principles</h3>
+                <p class="course-description">
+                  Master the fundamentals of user interface and experience
+                  design.
+                </p>
+                <div class="course-meta">
+                  <span class="meta-item">
+                    <i class="fas fa-clock"></i> 8 weeks
+                  </span>
+                  <span class="meta-item">
+                    <i class="fas fa-user-graduate"></i> 18 students
+                  </span>
+                </div>
+                <div class="course-price">249,000 RWF</div>
+              </div>
+            </div>
+
+            <!-- Sample Course Card 3 -->
+            <div class="course-card">
+              <div class="course-image">
+                <img
+                  src="../images/new.jpg"
+                  alt="Business Analytics"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                />
+                <div class="course-actions">
+                  <button class="action-trigger">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                  <div class="action-menu">
+                    <button class="action-btn">
+                      <i class="fas fa-edit" id="action-icon"></i> Edit
+                    </button>
+                    <button class="action-btn">
+                      <i class="fas fa-trash" id="action-icon"></i> Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="course-details">
+                <h3 class="course-title">Business Analytics</h3>
+                <p class="course-description">
+                  Learn how to analyze business data and make data-driven
+                  decisions.
+                </p>
+                <div class="course-meta">
+                  <span class="meta-item">
+                    <i class="fas fa-clock"></i> 10 weeks
+                  </span>
+                  <span class="meta-item">
+                    <i class="fas fa-user-graduate"></i> 15 students
+                  </span>
+                </div>
+                <div class="course-price">349,000 RWF</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+    <script>
+      // Search functionality would be implemented here
+      document
+        .querySelector(".search-box input")
+        .addEventListener("input", function (e) {
+          const searchTerm = e.target.value.toLowerCase();
+          const courseCards = document.querySelectorAll(".course-card");
+
+          courseCards.forEach((card) => {
+            const title = card
+              .querySelector(".course-title")
+              .textContent.toLowerCase();
+            const description = card
+              .querySelector(".course-description")
+              .textContent.toLowerCase();
+
+            if (
+              title.includes(searchTerm) ||
+              description.includes(searchTerm)
+            ) {
+              card.style.display = "block";
+            } else {
+              card.style.display = "none";
+            }
+          });
+        });
+
+      // Toggle action menu
+      document.querySelectorAll(".action-trigger").forEach((trigger) => {
+        trigger.addEventListener("click", function (e) {
+          e.stopPropagation();
+          const menu = this.nextElementSibling;
+          menu.classList.toggle("show");
+        });
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener("click", function () {
+        document.querySelectorAll(".action-menu").forEach((menu) => {
+          menu.classList.remove("show");
+        });
+      });
+    </script>
+  </body>
+</html>

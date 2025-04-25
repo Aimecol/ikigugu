@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Course | Ikigugu</title>
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <link rel="stylesheet" href="../css/animations.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .form-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        transform: translateY(20px);
+        opacity: 0;
+        animation: fadeInUp 0.5s ease-out forwards;
+      }
+
+      .form-header {
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      .form-header h2 {
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+      }
+
+      .form-header p {
+        color: var(--gray);
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--dark);
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--light);
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+        outline: none;
+      }
+
+      .textarea-control {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      .form-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+      }
+
+      .btn-primary {
+        background-color: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-2px);
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        border: 1px solid var(--light);
+        color: var(--dark);
+      }
+
+      .btn-outline:hover {
+        background-color: var(--light);
+      }
+
+      .input-icon {
+        position: absolute;
+        right: 1rem;
+        top: 20%;
+        transform: translateY(-50%);
+        color: var(--gray);
+      }
+
+      .duration-inputs {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .duration-inputs .form-group {
+        flex: 1;
+      }
+
+      .course-image-preview {
+        width: 100%;
+        height: 200px;
+        border-radius: 8px;
+        background-color: var(--light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .course-image-preview img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+      }
+
+      .upload-icon {
+        font-size: 3rem;
+        color: var(--gray-light);
+      }
+
+      .upload-btn {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 0.75rem;
+        background-color: var(--light);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .upload-btn:hover {
+        background-color: var(--gray-light);
+      }
+
+      @media (max-width: 768px) {
+        .form-container {
+          padding: 1.5rem;
+          margin: 1rem;
+        }
+
+        .duration-inputs {
+          flex-direction: column;
+          gap: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2><i class="fas fa-briefcase"></i> Ikigugu</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li>
+              <a href="../index.html"
+                ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="clients.html"><i class="fas fa-users"></i> Clients</a>
+            </li>
+            <li>
+              <a href="./products.html"
+                ><i class="fas fa-boxes"></i> Products</a
+              >
+            </li>
+            <li>
+              <a href="sales.html"><i class="fas fa-chart-line"></i> Sales</a>
+            </li>
+            <li>
+              <a href="students.html"
+                ><i class="fas fa-user-graduate"></i> Students</a
+              >
+            </li>
+            <li class="active">
+              <a href="courses.html"
+                ><i class="fas fa-book-open"></i> Courses</a
+              >
+            </li>
+            <li>
+              <a href="report.html"><i class="fas fa-file-alt"></i> Reports</a>
+            </li>
+            <li>
+              <a href="employees.html"
+                ><i class="fas fa-user-tie"></i> Employees</a
+              >
+            </li>
+            <li>
+              <a href="./notifications.html"
+                ><i class="fas fa-bell"></i> Notifications</a
+              >
+            </li>
+            <li>
+              <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <header class="main-header">
+          <div class="header-left">
+            <h1>Edit Course</h1>
+          </div>
+          <div class="header-right">
+            <div class="user-profile">
+              <img src="../images/new.jpg" alt="User" />
+              <span>Admin</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </header>
+
+        <div class="form-container">
+          <div class="form-header">
+            <h2><i class="fas fa-book-open mr-2"></i>Edit Course</h2>
+            <p>Update the course details below</p>
+          </div>
+
+          <form id="editCourseForm">
+            <div class="form-group">
+              <label for="courseTitle">Course Title</label>
+              <input
+                type="text"
+                id="courseTitle"
+                class="form-control"
+                placeholder="Enter course title"
+                required
+                value=""
+              />
+              <i class="fas fa-heading input-icon"></i>
+            </div>
+
+            <div class="form-group">
+              <label for="courseDescription">Description</label>
+              <textarea
+                id="courseDescription"
+                class="form-control textarea-control"
+                placeholder="Enter course description"
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Course Image</label>
+              <div class="course-image-preview">
+                <i class="fas fa-image upload-icon"></i>
+              </div>
+              <label for="courseImage" class="upload-btn">
+                <i class="fas fa-upload mr-2"></i>Change Image
+              </label>
+              <input
+                type="file"
+                id="courseImage"
+                accept="image/*"
+                style="display: none"
+              />
+            </div>
+
+            <div class="duration-inputs">
+              <div class="form-group">
+                <label for="courseDuration">Duration (weeks)</label>
+                <input
+                  type="number"
+                  id="courseDuration"
+                  class="form-control"
+                  placeholder="12"
+                  min="1"
+                  required
+                  value=""
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="courseHours">Hours per week</label>
+                <input
+                  type="number"
+                  id="courseHours"
+                  class="form-control"
+                  placeholder="10"
+                  min="1"
+                  required
+                  value=""
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="coursePrice">Price ($)</label>
+              <input
+                type="number"
+                id="coursePrice"
+                class="form-control"
+                placeholder="299"
+                min="0"
+                step="0.01"
+                required
+                value=""
+              />
+              <i class="fas fa-dollar-sign input-icon"></i>
+            </div>
+
+            <div class="form-footer">
+              <button type="button" class="btn btn-outline">Cancel</button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save mr-2"></i>Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+    <script>
+      // Image preview functionality
+      const courseImage = document.getElementById("courseImage");
+      const previewContainer = document.querySelector(".course-image-preview");
+
+      courseImage.addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (event) {
+            previewContainer.innerHTML = "";
+            const img = document.createElement("img");
+            img.src = event.target.result;
+            previewContainer.appendChild(img);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Form submission
+      document
+        .getElementById("editCourseForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          // Add form submission logic here
+          alert("Course updated successfully!");
+          // window.location.href = 'courses.html';
+        });
+
+      // Load course data from URL parameter
+      document.addEventListener('DOMContentLoaded', function() {
+        // Get course ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseId = urlParams.get('id');
+        
+        if (courseId) {
+          // Here you would fetch the course data from your backend
+          // For now we'll simulate with dummy data
+          const courseData = {
+            title: "Sample Course",
+            description: "This is a sample course description",
+            duration: 12,
+            hours: 10,
+            price: 299.99,
+            imageUrl: "" // Would be populated from backend
+          };
+          
+          // Populate form fields
+          document.getElementById('courseTitle').value = courseData.title;
+          document.getElementById('courseDescription').value = courseData.description;
+          document.getElementById('courseDuration').value = courseData.duration;
+          document.getElementById('courseHours').value = courseData.hours;
+          document.getElementById('coursePrice').value = courseData.price;
+          
+          // If there's an image URL, display it
+          if (courseData.imageUrl) {
+            previewContainer.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = courseData.imageUrl;
+            previewContainer.appendChild(img);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

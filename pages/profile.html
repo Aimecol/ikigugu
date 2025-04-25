@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Profile | Business Management</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <style>
+      /* Profile Page Specific Styles */
+      .profile-container {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .profile-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 2rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        animation: fadeIn 0.5s ease;
+      }
+
+      .profile-picture {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid var(--primary-light);
+        margin-bottom: 1rem;
+      }
+
+      .profile-details {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .profile-card {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        animation: fadeIn 0.5s ease;
+      }
+
+      .profile-card h3 {
+        color: var(--primary);
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .detail-row:last-child {
+        border-bottom: none;
+      }
+
+      .detail-label {
+        font-weight: 600;
+        color: var(--dark);
+      }
+
+      .detail-value {
+        color: var(--gray);
+      }
+
+      .edit-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .edit-btn:hover {
+        background: var(--secondary);
+        transform: translateY(-2px);
+      }
+
+      .change-password-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        margin-left: 1rem;
+      }
+
+      .change-password-btn:hover {
+        background: var(--secondary);
+        transform: translateY(-2px);
+      }
+
+      .change-password-form {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .change-password-form .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .change-password-form label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+        font-weight: 600;
+      }
+
+      .change-password-form input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid var(--primary-light);
+        border-radius: 4px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .change-password-form input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+      }
+
+      .btn-cancel-password,
+      .btn-save-password {
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+      }
+
+      .btn-cancel-password {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        margin-right: 1rem;
+      }
+
+      .btn-save-password {
+        background: var(--primary);
+        border: none;
+        color: white;
+      }
+
+      .btn-cancel-password:hover,
+      .btn-save-password:hover {
+        transform: translateY(-2px);
+      }
+
+      .btn-upload {
+        color: #fff;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .profile-details {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2><i class="fas fa-briefcase"></i> Ikigugu</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li>
+              <a href="../index.html"
+                ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="./clients.html"><i class="fas fa-users"></i> Clients</a>
+            </li>
+            <li>
+              <a href="./products.html"
+                ><i class="fas fa-boxes"></i> Products</a
+              >
+            </li>
+            <li>
+              <a href="./sales.html"><i class="fas fa-chart-line"></i> Sales</a>
+            </li>
+            <li>
+              <a href="./students.html"
+              ><i class="fas fa-user-graduate"></i> Students</a
+              >
+            </li>
+            <li>
+              <a href="./courses.html"
+                ><i class="fas fa-book-open"></i> Courses</a
+              >
+            </li>
+            <li>
+              <a href="./report.html"
+                ><i class="fas fa-file-alt"></i> Reports</a
+              >
+            </li>
+            <li>
+              <a href="employees.html"
+                ><i class="fas fa-user-tie"></i> Employees</a
+              >
+            </li>
+            <li>
+              <a href="./notifications.html"
+                ><i class="fas fa-bell"></i> Notifications</a
+              >
+            </li>
+            <li class="active">
+              <a href="./profile.html"><i class="fas fa-user"></i> Profile</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="main-header">
+          <div class="header-left">
+            <h1>Admin Profile</h1>
+          </div>
+          <div class="header-right">
+            <div class="user-profile">
+              <img src="../images/new.jpg" alt="User" />
+              <span>Admin</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-wrapper profile-container">
+          <!-- Edit Profile Form -->
+          <section class="edit-profile-form">
+            <div class="form-header">
+              <h2><i class="fas fa-user-edit"></i> Edit Profile</h2>
+            </div>
+
+            <form id="profileForm">
+              <div class="avatar-upload">
+                <div class="avatar-preview">
+                  <img
+                    src="../images/new.jpg"
+                    alt="Profile Preview"
+                    id="avatarPreview"
+                  />
+                </div>
+                <div class="upload-controls">
+                  <input
+                    type="file"
+                    id="avatarInput"
+                    accept="image/*"
+                    style="display: none"
+                  />
+                  <button
+                    type="button"
+                    class="btn-upload"
+                    onclick="document.getElementById('avatarInput').click()"
+                  >
+                    <i class="fas fa-camera"></i> Change Photo
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="fullName"
+                    ><i class="fas fa-user"></i> Full Name</label
+                  >
+                  <input
+                    type="text"
+                    id="fullName"
+                    placeholder="Enter your full name"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="email"
+                    ><i class="fas fa-envelope"></i> Email</label
+                  >
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="phone"><i class="fas fa-phone"></i> Phone</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    placeholder="Enter your phone number"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="position"
+                    ><i class="fas fa-briefcase"></i> Position</label
+                  >
+                  <input
+                    type="text"
+                    id="position"
+                    placeholder="Enter your position"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="username"
+                    ><i class="fas fa-user"></i> Username</label
+                  >
+                  <input
+                    type="text"
+                    id="username"
+                    placeholder="Enter your username"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button
+                  type="button"
+                  class="btn-cancel"
+                  onclick="document.location.href='./profile.html'"
+                >
+                  Cancel
+                </button>
+                <button type="submit" class="btn-save">Save Changes</button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Profile Header -->
+          <section class="profile-header">
+            <img
+              src="../images/new.jpg"
+              alt="Profile Picture"
+              class="profile-picture"
+            />
+            <h2>Admin User</h2>
+            <p>Administrator</p>
+            <button class="edit-btn">
+              <i class="fas fa-edit"></i> Edit Profile
+            </button>
+          </section>
+
+          <!-- Profile Details -->
+          <section class="profile-details">
+            <div class="profile-card">
+              <h3>Personal Information</h3>
+              <div class="detail-row">
+                <span class="detail-label">Full Name</span>
+                <span class="detail-value">Admin User</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Email</span>
+                <span class="detail-value">admin@example.com</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Phone</span>
+                <span class="detail-value">+1 (555) 123-4567</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Position</span>
+                <span class="detail-value">Administrator</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Joined</span>
+                <span class="detail-value">January 2023</span>
+              </div>
+            </div>
+
+            <div class="profile-card">
+              <h3>Account Settings</h3>
+              <div class="detail-row">
+                <span class="detail-label">Username</span>
+                <span class="detail-value">admin</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Password</span>
+                <span class="detail-value">••••••••</span>
+                <button class="change-password-btn">
+                  <i class="fas fa-key"></i> Change
+                </button>
+              </div>
+              <!-- Change Password Form -->
+              <div class="change-password-form" style="display: none">
+                <div class="form-group">
+                  <label for="currentPassword">
+                    <i class="fas fa-lock"></i> Current Password
+                  </label>
+                  <input
+                    type="password"
+                    id="currentPassword"
+                    placeholder="Enter current password"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="newPassword">
+                    <i class="fas fa-key"></i> New Password
+                  </label>
+                  <input
+                    type="password"
+                    \n
+                    id="newPassword"
+                    placeholder="Enter new password"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="confirmPassword">
+                    <i class="fas fa-check"></i> Confirm Password
+                  </label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="Confirm new password"
+                    required
+                  />
+                </div>
+                <div class="form-actions">
+                  <button type="button" class="btn-cancel-password">
+                    Cancel
+                  </button>
+                  <button type="button" class="btn-save-password">
+                    Save Password
+                  </button>
+                </div>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Last Login</span>
+                <span class="detail-value">Today, 10:30 AM</span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+    <script>
+      // Profile Page Specific JavaScript
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add animation to profile cards on scroll
+        const profileCards = document.querySelectorAll(
+          ".profile-card, .profile-header"
+        );
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.style.opacity = "1";
+                entry.target.style.transform = "translateY(0)";
+              }
+            });
+          },
+          { threshold: 0.1 }
+        );
+
+        profileCards.forEach((card) => {
+          card.style.opacity = "0";
+          card.style.transform = "translateY(20px)";
+          card.style.transition = "all 0.5s ease";
+          observer.observe(card);
+        });
+
+        // Edit Profile Button Toggle
+        const editBtn = document.querySelector(".edit-btn");
+        const editForm = document.querySelector(".edit-profile-form");
+
+        // Hide form initially
+        editForm.style.display = "none";
+
+        editBtn.addEventListener("click", () => {
+          if (editForm.style.display === "none") {
+            editForm.style.display = "block";
+            editForm.scrollIntoView({ behavior: "smooth" });
+          } else {
+            editForm.style.display = "none";
+          }
+        });
+
+        // Avatar Preview Functionality
+        const avatarInput = document.getElementById("avatarInput");
+        const avatarPreview = document.getElementById("avatarPreview");
+
+        avatarInput.addEventListener("change", function () {
+          const file = this.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              avatarPreview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+        // Change Password Functionality
+        const changePasswordBtn = document.querySelector(
+          ".change-password-btn"
+        );
+        const changePasswordForm = document.querySelector(
+          ".change-password-form"
+        );
+        const cancelPasswordBtn = document.querySelector(
+          ".btn-cancel-password"
+        );
+        const savePasswordBtn = document.querySelector(".btn-save-password");
+
+        changePasswordBtn.addEventListener("click", () => {
+          changePasswordForm.style.display = "block";
+        });
+
+        cancelPasswordBtn.addEventListener("click", () => {
+          changePasswordForm.style.display = "none";
+          document.getElementById("currentPassword").value = "";
+          document.getElementById("newPassword").value = "";
+          document.getElementById("confirmPassword").value = "";
+        });
+
+        savePasswordBtn.addEventListener("click", () => {
+          const currentPassword =
+            document.getElementById("currentPassword").value;
+          const newPassword = document.getElementById("newPassword").value;
+          const confirmPassword =
+            document.getElementById("confirmPassword").value;
+
+          if (!currentPassword || !newPassword || !confirmPassword) {
+            alert("Please fill in all password fields");
+            return;
+          }
+
+          if (newPassword !== confirmPassword) {
+            alert("New password and confirm password do not match");
+            return;
+          }
+
+          // Here you would typically make an API call to update the password
+          alert("Password updated successfully");
+          changePasswordForm.style.display = "none";
+          document.getElementById("currentPassword").value = "";
+          document.getElementById("newPassword").value = "";
+          document.getElementById("confirmPassword").value = "";
+        });
+      });
+    </script>
+  </body>
+</html>

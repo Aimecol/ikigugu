@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reports | Business Management</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <style>
+      /* Reports Page Specific Styles */
+      .reports-container {
+        padding: 2rem;
+      }
+
+      .reports-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .header-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .filter-controls {
+        display: flex;
+        flex-grow: 1;
+        gap: 1rem;
+        max-width: 700px;
+        flex-wrap: wrap;
+      }
+
+      .date-filter {
+        position: relative;
+        flex-grow: 1;
+      }
+
+      .date-input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        border: 2px solid var(--primary-light);
+        border-radius: 50px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .date-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+      }
+
+      .date-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary);
+        transition: all 0.3s ease;
+      }
+
+      .date-input:focus + .date-icon {
+        color: var(--primary-dark);
+      }
+
+      .report-type-filter {
+        position: relative;
+        min-width: 180px;
+      }
+
+      .report-select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid var(--primary-light);
+        border-radius: 50px;
+        font-size: 1rem;
+        appearance: none;
+        background: rgba(255, 255, 255, 0.9);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .report-select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+      }
+
+      .filter-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary);
+        pointer-events: none;
+      }
+
+      .export-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(67, 97, 238, 0.2);
+      }
+
+      .export-btn:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(67, 97, 238, 0.3);
+      }
+
+      .export-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(67, 97, 238, 0.2);
+      }
+
+      /* Report Metrics */
+      .report-metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .metric-card {
+        position: relative;
+        overflow: hidden;
+        animation: fadeInUp 0.5s ease forwards;
+        opacity: 0;
+      }
+
+      .metric-card:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+
+      .metric-card:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      .metric-card:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+
+      .metric-card:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+
+      .metric-card::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: var(--primary);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.5s ease;
+      }
+
+      .metric-card:hover::after {
+        transform: scaleX(1);
+      }
+
+      /* Charts Section */
+      .charts-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .chart-card {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        animation: fadeIn 0.5s ease forwards;
+        opacity: 0;
+      }
+
+      .chart-card:nth-child(1) {
+        animation-delay: 0.5s;
+      }
+
+      .chart-card:nth-child(2) {
+        animation-delay: 0.6s;
+      }
+
+      .chart-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .chart-title {
+        font-weight: 600;
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .chart-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .chart-btn {
+        background: none;
+        border: none;
+        color: var(--gray);
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0.25rem;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+      }
+
+      .chart-btn:hover {
+        color: var(--primary);
+        background: rgba(67, 97, 238, 0.1);
+      }
+
+      .chart-container {
+        height: 300px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .chart-placeholder {
+        width: 100%;
+        height: 100%;
+        background: rgba(248, 249, 250, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+      }
+
+      /* Data Table */
+      .data-table-container {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+        animation: fadeIn 0.5s ease forwards;
+        animation-delay: 0.7s;
+        opacity: 0;
+      }
+
+      .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .table-title {
+        font-weight: 600;
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .table-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .table-search {
+        position: relative;
+        width: 250px;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.5rem 1rem 0.5rem 2.5rem;
+        border: 1px solid var(--gray);
+        border-radius: 4px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray);
+        transition: all 0.3s ease;
+      }
+
+      .search-input:focus + .search-icon {
+        color: var(--primary);
+      }
+
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+
+      .data-table th,
+      .data-table td {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .data-table th {
+        background: rgba(248, 249, 250, 0.5);
+        color: var(--dark);
+        font-weight: 600;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .data-table th:hover {
+        background: rgba(67, 97, 238, 0.05);
+      }
+
+      .data-table th::after {
+        content: "\f0dc";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        margin-left: 0.5rem;
+        color: var(--gray);
+        font-size: 0.8rem;
+      }
+
+      .data-table th.sort-asc::after {
+        content: "\f0de";
+        color: var(--primary);
+      }
+
+      .data-table th.sort-desc::after {
+        content: "\f0dd";
+        color: var(--primary);
+      }
+
+      .data-table tbody tr {
+        transition: all 0.3s ease;
+      }
+
+      .data-table tbody tr:hover {
+        background: rgba(67, 97, 238, 0.05);
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      .status-completed {
+        background: rgba(76, 201, 240, 0.1);
+        color: var(--success);
+      }
+
+      .status-pending {
+        background: rgba(247, 37, 133, 0.1);
+        color: var(--warning);
+      }
+
+      .status-cancelled {
+        background: rgba(239, 35, 60, 0.1);
+        color: var(--danger);
+      }
+
+      .table-pagination {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .pagination-info {
+        color: var(--gray);
+        font-size: 0.9rem;
+      }
+
+      .pagination-controls {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .pagination-btn {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--gray);
+        border-radius: 4px;
+        background: white;
+        color: var(--dark);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .pagination-btn:hover {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+
+      .pagination-btn.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+
+      .pagination-btn.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Responsive Styles */
+      @media (max-width: 992px) {
+        .charts-container {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .reports-header {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .filter-controls {
+          max-width: 100%;
+        }
+
+        .data-table {
+          display: block;
+          overflow-x: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2><i class="fas fa-briefcase"></i> Ikigugu</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li>
+              <a href="../index.html"
+                ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="clients.html"><i class="fas fa-users"></i> Clients</a>
+            </li>
+            <li>
+              <a href="./products.html"
+                ><i class="fas fa-boxes"></i> Products</a
+              >
+            </li>
+            <li>
+              <a href="sales.html"><i class="fas fa-chart-line"></i> Sales</a>
+            </li>
+            <li>
+              <a href="students.html"
+                ><i class="fas fa-user-graduate"></i> Students</a
+              >
+            </li>
+            <li>
+              <a href="courses.html"
+                ><i class="fas fa-book-open"></i> Courses</a
+              >
+            </li>
+            <li class="active">
+              <a href="report.html"><i class="fas fa-file-alt"></i> Reports</a>
+            </li>
+            <li>
+              <a href="employees.html"
+                ><i class="fas fa-user-tie"></i> Employees</a
+              >
+            </li>
+            <li>
+              <a href="./notifications.html"
+                ><i class="fas fa-bell"></i> Notifications</a
+              >
+            </li>
+            <li>
+              <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="main-header">
+          <div class="header-left">
+            <h1>Business Reports</h1>
+          </div>
+          <div class="header-right">
+            <div class="user-profile">
+              <img src="../images/new.jpg" alt="User" />
+              <span>Admin</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-wrapper reports-container">
+          <div class="reports-header">
+            <div class="header-title">
+            </div>
+            <div class="filter-controls">
+              <div class="date-filter">
+                <input
+                  type="date"
+                  class="date-input"
+                  id="reportDate"
+                  value="2023-06-01"
+                />
+                <i class="fas fa-calendar-alt date-icon"></i>
+              </div>
+              <div class="report-type-filter">
+                <select class="report-select" id="reportType">
+                  <option value="all">All Reports</option>
+                  <option value="sales">Sales Report</option>
+                  <option value="inventory">Inventory Report</option>
+                  <option value="clients">Client Report</option>
+                  <option value="students">Student Report</option>
+                </select>
+                <i class="fas fa-filter filter-icon"></i>
+              </div>
+            </div>
+            <button class="export-btn" id="exportReport">
+              <i class="fas fa-file-export"></i>
+              Export Report
+            </button>
+          </div>
+
+          <!-- Report Metrics -->
+          <section class="report-metrics">
+            <div class="metric-card">
+              <div class="metric-icon">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <div class="metric-info">
+                <h3>Total Revenue</h3>
+                <p>$24,580</p>
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon">
+                <i class="fas fa-shopping-cart"></i>
+              </div>
+              <div class="metric-info">
+                <h3>Total Sales</h3>
+                <p>856 Orders</p>
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="metric-info">
+                <h3>New Clients</h3>
+                <p>45 This Month</p>
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon">
+                <i class="fas fa-user-graduate"></i>
+              </div>
+              <div class="metric-info">
+                <h3>Active Students</h3>
+                <p>128 Students</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Charts Section -->
+          <section class="charts-container">
+            <div class="chart-card">
+              <div class="chart-header">
+                <h3 class="chart-title">
+                  <i class="fas fa-chart-bar"></i> Monthly Revenue
+                </h3>
+                <div class="chart-actions">
+                  <button class="chart-btn" title="Download">
+                    <i class="fas fa-download"></i>
+                  </button>
+                  <button class="chart-btn" title="Refresh">
+                    <i class="fas fa-sync-alt"></i>
+                  </button>
+                  <button class="chart-btn" title="More Options">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="chart-container">
+                <div class="chart-placeholder" id="revenueChart">
+                  <i class="fas fa-spinner fa-spin"></i> Loading chart...
+                </div>
+              </div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-header">
+                <h3 class="chart-title">
+                  <i class="fas fa-chart-pie"></i> Sales Distribution
+                </h3>
+                <div class="chart-actions">
+                  <button class="chart-btn" title="Download">
+                    <i class="fas fa-download"></i>
+                  </button>
+                  <button class="chart-btn" title="Refresh">
+                    <i class="fas fa-sync-alt"></i>
+                  </button>
+                  <button class="chart-btn" title="More Options">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="chart-container">
+                <div class="chart-placeholder" id="distributionChart">
+                  <i class="fas fa-spinner fa-spin"></i> Loading chart...
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Data Table -->
+          <section class="data-table-container">
+            <div class="table-header">
+              <h3 class="table-title">
+                <i class="fas fa-table"></i> Recent Transactions
+              </h3>
+              <div class="table-actions">
+                <div class="table-search">
+                  <input
+                    type="text"
+                    class="search-input"
+                    placeholder="Search transactions..."
+                    id="tableSearch"
+                  />
+                  <i class="fas fa-search search-icon"></i>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table" id="transactionsTable">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Client</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Table data will be dynamically generated -->
+                </tbody>
+              </table>
+            </div>
+            <div class="table-pagination">
+              <div class="pagination-info">
+                Showing <span id="pageStart">1</span> to
+                <span id="pageEnd">10</span> of
+                <span id="totalEntries">50</span> entries
+              </div>
+              <div class="pagination-controls">
+                <button class="pagination-btn" id="prevPage" disabled>
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="pagination-btn active">1</button>
+                <button class="pagination-btn">2</button>
+                <button class="pagination-btn">3</button>
+                <button class="pagination-btn">4</button>
+                <button class="pagination-btn">5</button>
+                <button class="pagination-btn" id="nextPage">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script src="../js/report.js"></script>
+  </body>
+</html>

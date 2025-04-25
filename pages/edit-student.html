@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Student | Business Management</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <style>
+      /* Edit Student Page Specific Styles */
+      .edit-student-container {
+        padding: 2rem;
+      }
+
+      .edit-student-form {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        animation: fadeIn 0.5s ease;
+      }
+
+      .form-header {
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .form-header h2 {
+        color: var(--primary);
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .form-group label {
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .form-group input,
+      .form-group select {
+        padding: 0.75rem;
+        border: 1px solid var(--gray);
+        border-radius: 4px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.25);
+        outline: none;
+      }
+
+      .avatar-upload {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .avatar-preview {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 4px solid var(--primary-light);
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .avatar-preview:hover {
+        transform: scale(1.05);
+      }
+
+      .avatar-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .upload-controls {
+        display: flex;
+        justify-content: center;
+      }
+
+      .btn-upload {
+        background: var(--primary-light);
+        color: var(--primary);
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .btn-upload:hover {
+        background: var(--primary);
+        color: white;
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+      }
+
+      .btn-cancel,
+      .btn-save {
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-cancel {
+        background: white;
+        color: var(--danger);
+        border: 1px solid var(--danger);
+      }
+
+      .btn-cancel:hover {
+        background: rgba(239, 35, 60, 0.1);
+      }
+
+      .btn-save {
+        background: var(--primary);
+        color: white;
+        border: none;
+      }
+
+      .btn-save:hover {
+        background: var(--secondary);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2><i class="fas fa-briefcase"></i> Ikigugu</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li>
+              <a href="../index.html"
+                ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="./clients.html"><i class="fas fa-users"></i> Clients</a>
+            </li>
+            <li>
+              <a href="./products.html"
+                ><i class="fas fa-boxes"></i> Products</a
+              >
+            </li>
+            <li>
+              <a href="./sales.html"><i class="fas fa-chart-line"></i> Sales</a>
+            </li>
+            <li class="active">
+              <a href="./students.html"
+                ><i class="fas fa-user-graduate"></i> Students</a
+              >
+            </li>
+            <li>
+              <a href="courses.html"
+                ><i class="fas fa-book-open"></i> Courses</a
+              >
+            </li>
+            <li>
+              <a href="./report.html"
+                ><i class="fas fa-file-alt"></i> Reports</a
+              >
+            </li>
+            <li>
+              <a href="employees.html"
+                ><i class="fas fa-user-tie"></i> Employees</a
+              >
+            </li>
+            <li>
+              <a href="./notifications.html"
+                ><i class="fas fa-bell"></i> Notifications</a
+              >
+            </li>
+            <li>
+              <a href="./profile.html"><i class="fas fa-user"></i> Profile</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="main-header">
+          <div class="header-left">
+            <h1>Edit Student</h1>
+          </div>
+          <div class="header-right">
+            <div class="user-profile">
+              <img src="./Fab.jpg" alt="User" />
+              <span>Admin</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-wrapper edit-student-container">
+          <form class="edit-student-form">
+            <div class="form-header">
+              <i class="fas fa-user-graduate"></i>
+              <h2>Student Information</h2>
+            </div>
+
+            <div class="avatar-upload">
+              <div class="avatar-preview">
+                <img
+                  id="avatar-preview-img"
+                  src="../images/new.jpg"
+                  alt="Student Avatar"
+                />
+              </div>
+              <div class="upload-controls">
+                <label for="avatar-upload" class="btn-upload">
+                  <i class="fas fa-camera"></i>
+                  Change Photo
+                </label>
+                <input
+                  type="file"
+                  id="avatar-upload"
+                  style="display: none"
+                  accept="image/*"
+                />
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="student-name">
+                  <i class="fas fa-user"></i> Full Name
+                </label>
+                <input
+                  type="text"
+                  id="student-name"
+                  name="name"
+                  value="John Doe"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="student-email">
+                  <i class="fas fa-envelope"></i> Email Address
+                </label>
+                <input
+                  type="email"
+                  id="student-email"
+                  name="email"
+                  value="john.doe@example.com"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="student-phone">
+                  <i class="fas fa-phone"></i> Phone Number
+                </label>
+                <input
+                  type="tel"
+                  id="student-phone"
+                  name="phone"
+                  value="+1 (555) 123-4567"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="student-university">
+                  <i class="fas fa-university"></i> University
+                </label>
+                <input
+                  type="text"
+                  id="student-university"
+                  name="university"
+                  value="Tech University"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="student-course">
+                  <i class="fas fa-book"></i> Course
+                </label>
+                <select id="student-course" name="course" required>
+                  <option value="web-development" selected>
+                    Web Development
+                  </option>
+                  <option value="data-science">Data Science</option>
+                  <option value="ui-ux-design">UI/UX Design</option>
+                  <option value="mobile-development">Mobile Development</option>
+                  <option value="cybersecurity">Cybersecurity</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="student-start-date">
+                  <i class="fas fa-calendar"></i> Start Date
+                </label>
+                <input
+                  type="date"
+                  id="student-start-date"
+                  name="startDate"
+                  value="2023-01-15"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="student-end-date">
+                  <i class="fas fa-calendar"></i> End Date
+                </label>
+                <input
+                  type="date"
+                  id="student-end-date"
+                  name="endDate"
+                  value="2023-07-15"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button
+                type="button"
+                class="btn-cancel"
+                onclick="window.location.href='students.html'"
+              >
+                <i class="fas fa-times"></i> Cancel
+              </button>
+              <button type="submit" class="btn-save">
+                <i class="fas fa-save"></i> Update Student
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+    <script>
+      // Preview uploaded image
+      document.addEventListener("DOMContentLoaded", function () {
+        const avatarUpload = document.getElementById("avatar-upload");
+        const avatarPreview = document.getElementById("avatar-preview-img");
+
+        avatarUpload.addEventListener("change", function () {
+          const file = this.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              avatarPreview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+        // Form submission (prevent default for demo)
+        const form = document.querySelector(".edit-student-form");
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          alert("Student updated successfully!");
+          window.location.href = "students.html";
+        });
+      });
+    </script>
+  </body>
+</html>

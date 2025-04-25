@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Categories</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <style>
+      .categories-container {
+        padding: 2rem;
+      }
+
+      .categories-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding: 20px;
+      }
+
+      .add-category-btn {
+        padding: 0.75rem 1.5rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .add-category-btn:hover {
+        background: var(--primary-dark);
+      }
+
+      .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 20px;
+      }
+
+      .category-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .category-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+      }
+
+      .category-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--dark);
+      }
+
+      .category-description {
+        color: var(--gray);
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .category-actions {
+        position: relative;
+      }
+
+      .action-toggle {
+        background: transparent;
+        border: none;
+        color: var(--gray);
+        cursor: pointer;
+        padding: 0.5rem;
+        transition: color 0.3s ease;
+      }
+
+      .action-toggle:hover {
+        color: var(--primary);
+      }
+
+      .action-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        min-width: 150px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        z-index: 100;
+      }
+
+      .action-menu.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .action-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: none;
+        border: none;
+        color: var(--dark);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: left;
+      }
+
+      .action-btn:hover {
+        background: var(--primary-light);
+        color: var(--primary);
+      }
+
+      .action-btn.delete:hover {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2><i class="fas fa-briefcase"></i> Ikigugu</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li>
+              <a href="../index.html"
+                ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="./clients.html"><i class="fas fa-users"></i> Clients</a>
+            </li>
+            <li class="active">
+              <a href="./products.html"
+                ><i class="fas fa-boxes"></i> Products</a
+              >
+            </li>
+            <li>
+              <a href="./sales.html"><i class="fas fa-chart-line"></i> Sales</a>
+            </li>
+            <li>
+              <a href="./students.html"
+                ><i class="fas fa-user-graduate"></i> Students</a
+              >
+            </li>
+            <li>
+              <a href="courses.html"
+                ><i class="fas fa-book-open"></i> Courses</a
+              >
+            </li>
+            <li>
+              <a href="./report.html"
+                ><i class="fas fa-file-alt"></i> Reports</a
+              >
+            </li>
+            <li>
+              <a href="employees.html"
+                ><i class="fas fa-user-tie"></i> Employees</a
+              >
+            </li>
+            <li>
+              <a href="./notifications.html"
+                ><i class="fas fa-bell"></i> Notifications</a
+              >
+            </li>
+            <li>
+              <a href="./profile.html"><i class="fas fa-user"></i> Profile</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="main-header">
+          <div class="header-left">
+            <h1>Products & Services</h1>
+          </div>
+          <div class="header-right">
+            <div class="user-profile">
+              <img src="../images/new.jpg" alt="User" />
+              <span>Admin</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </header>
+        <div class="categories-header">
+          <h2>Product Categories</h2>
+          <button class="add-category-btn">
+            <i class="fas fa-plus"></i> Add Category
+          </button>
+        </div>
+
+        <div class="category-grid">
+          <!-- Category Card 1 -->
+          <div class="category-card">
+            <div class="category-header">
+              <h3 class="category-title">Electronics</h3>
+              <div class="category-actions">
+                <button class="action-toggle">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <div class="action-menu">
+                  <button class="action-btn">
+                    <i class="fas fa-edit"></i> Edit
+                  </button>
+                  <button class="action-btn delete">
+                    <i class="fas fa-trash"></i> Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+            <p class="category-description">
+              All electronic devices including smartphones, laptops, and
+              accessories.
+            </p>
+          </div>
+
+          <!-- Category Card 2 -->
+          <div class="category-card">
+            <div class="category-header">
+              <h3 class="category-title">Clothing</h3>
+              <div class="category-actions">
+                <button class="action-toggle">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <div class="action-menu">
+                  <button class="action-btn">
+                    <i class="fas fa-edit"></i> Edit
+                  </button>
+                  <button class="action-btn delete">
+                    <i class="fas fa-trash"></i> Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+            <p class="category-description">
+              Men's, women's and children's clothing for all seasons.
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+    <script>
+      // Toggle action menus
+      document.querySelectorAll(".action-toggle").forEach((button) => {
+        button.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const menu = button.nextElementSibling;
+          menu.classList.toggle("show");
+        });
+      });
+
+      // Close menus when clicking outside
+      document.addEventListener("click", () => {
+        document.querySelectorAll(".action-menu").forEach((menu) => {
+          menu.classList.remove("show");
+        });
+      });
+    </script>
+  </body>
+</html>

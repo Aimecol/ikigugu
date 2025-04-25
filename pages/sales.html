@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sales Dashboard | Business Management</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <style>
+      /* Sales Page Specific Styles */
+      :root {
+        --primary-dark: #3a56d4; /* Darker shade for hover states */
+      }
+
+      .sales-container {
+        padding: 2rem;
+      }
+
+      .sales-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        gap: 1rem;
+      }
+
+      .search-container {
+        position: relative;
+        flex-grow: 1;
+        max-width: 400px;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary);
+        transition: all 0.3s ease;
+      }
+
+      .search-bar {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 3rem;
+        border: 2px solid var(--primary-light);
+        border-radius: 50px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .search-bar:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+      }
+
+      /* Filter Button Styling */
+      .filter-container {
+        display: flex;
+        gap: 1rem;
+        position: relative;
+      }
+
+      .filter-btn {
+        padding: 0.75rem 1.25rem;
+        /* color: white; */
+        border: none;
+        border-radius: 50px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(67, 97, 238, 0.2);
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1em;
+        padding-right: 2.5rem;
+      }
+
+      .filter-btn.active,
+      .filter-btn:hover {
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+      }
+
+      /* Export Button Styling */
+      .btn-submit {
+        padding: 0.75rem 1.25rem;
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 8px rgba(67, 97, 238, 0.2);
+      }
+
+      .btn-submit:hover {
+        background: linear-gradient(to right, var(--secondary), var(--primary));
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(67, 97, 238, 0.3);
+      }
+
+      /* Action Button Styling */
+      .btn-action {
+        padding: 0.6rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        text-decoration: none;
+      }
+
+      .btn-secondary {
+        background: var(--primary-light);
+        color: white;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-secondary:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        background: var(--primary);
+        transition: all 0.3s ease;
+        z-index: 0;
+      }
+
+      .btn-secondary:hover:before {
+        width: 100%;
+      }
+
+      .btn-secondary i {
+        position: relative;
+        z-index: 1;
+      }
+
+      .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
+      }
+
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .metric-card {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        animation: fadeIn 0.5s ease;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .metric-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .metric-title {
+        font-size: 0.9rem;
+        color: var(--gray);
+      }
+
+      .metric-value {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: var(--dark);
+      }
+
+      .metric-change {
+        display: flex;
+        align-items: center;
+        font-size: 0.85rem;
+      }
+
+      .positive {
+        color: #10b981;
+      }
+
+      .negative {
+        color: #ef4444;
+      }
+
+      .chart-container {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+        animation: fadeIn 0.5s ease;
+      }
+
+      .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .chart-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--dark);
+      }
+
+      .chart {
+        height: 300px;
+        background: var(--light);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        font-size: 1.5rem;
+      }
+
+      .transactions-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        padding: 1.5rem;
+        animation: fadeIn 0.5s ease;
+      }
+
+      .transactions-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .transactions-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--dark);
+      }
+
+      .transactions-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .transactions-table th,
+      .transactions-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--light);
+      }
+
+      .transactions-table th {
+        font-weight: 600;
+        color: var(--gray);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+      }
+
+      .transactions-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .status {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .status-completed {
+        background: #d1fae5;
+        color: #065f46;
+      }
+
+      .status-pending {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .status-canceled {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .sales-container {
+          padding: 1rem;
+        }
+
+        .metrics-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .transactions-table th,
+        .transactions-table td {
+          padding: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2><i class="fas fa-briefcase"></i> Ikigugu</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li>
+              <a href="../index.html"
+                ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="./clients.html"><i class="fas fa-users"></i> Clients</a>
+            </li>
+            <li>
+              <a href="./products.html"
+                ><i class="fas fa-boxes"></i> Products</a
+              >
+            </li>
+            <li class="active">
+              <a href="./sales.html"><i class="fas fa-chart-line"></i> Sales</a>
+            </li>
+            <li>
+              <a href="./students.html"
+                ><i class="fas fa-user-graduate"></i> Students</a
+              >
+            </li>
+            <li>
+              <a href="courses.html"
+                ><i class="fas fa-book-open"></i> Courses</a
+              >
+            </li>
+            <li>
+              <a href="./report.html"
+                ><i class="fas fa-file-alt"></i> Reports</a
+              >
+            </li>
+            <li>
+              <a href="employees.html"
+                ><i class="fas fa-user-tie"></i> Employees</a
+              >
+            </li>
+            <li>
+              <a href="./notifications.html"
+                ><i class="fas fa-bell"></i> Notifications</a
+              >
+            </li>
+            <li>
+              <a href="./profile.html"><i class="fas fa-user"></i> Profile</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="main-header">
+          <div class="header-left">
+            <h1>Sales Dashboard</h1>
+          </div>
+          <div class="header-right">
+            <div class="user-profile">
+              <img src="../images/new.jpg" alt="User" />
+              <span>Admin</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-wrapper sales-container">
+          <div class="sales-header">
+            <a
+              href="add-sales.html"
+              class="btn-submit"
+              style="text-decoration: none;"
+            >
+              <i class="fas fa-plus"></i> Add Sale
+            </a>
+            <div class="search-container">
+              <i class="fas fa-search search-icon"></i>
+              <input
+                type="text"
+                class="search-bar"
+                placeholder="Search transactions..."
+              />
+            </div>
+            <div class="filter-container">
+              <select class="filter-btn">
+                <option>Today</option>
+                <option>This Week</option>
+                <option>This Month</option>
+                <option>This Year</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <!-- Metric Card 1 -->
+            <div class="metric-card">
+              <div class="metric-title">Total Revenue</div>
+              <div class="metric-value">25,450 RWF</div>
+              <div class="metric-change positive">
+                <i class="fas fa-arrow-up"></i> 12% from yesterday
+              </div>
+            </div>
+
+            <!-- Metric Card 2 -->
+            <div class="metric-card">
+              <div class="metric-title">Total Orders</div>
+              <div class="metric-value">48</div>
+              <div class="metric-change positive">
+                <i class="fas fa-arrow-up"></i> 5% from yesterday
+              </div>
+            </div>
+
+            <!-- Metric Card 3 -->
+            <div class="metric-card">
+              <div class="metric-title">Average Order Value</div>
+              <div class="metric-value">530 RWF</div>
+              <div class="metric-change negative">
+                <i class="fas fa-arrow-down"></i> 2% from yesterday
+              </div>
+            </div>
+
+            <!-- Metric Card 4 -->
+            <div class="metric-card">
+              <div class="metric-title">Conversion Rate</div>
+              <div class="metric-value">3.2%</div>
+              <div class="metric-change positive">
+                <i class="fas fa-arrow-up"></i> 0.5% from yesterday
+              </div>
+            </div>
+          </div>
+
+          <div class="transactions-container">
+            <div class="transactions-header">
+              <div class="transactions-title">Recent Transactions</div>
+              <button class="btn-submit">
+                <i class="fas fa-download"></i> Export
+              </button>
+            </div>
+            <table class="transactions-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#ORD-001</td>
+                  <td>John Doe</td>
+                  <td>Today, 10:30 AM</td>
+                  <td>1,250 RWF</td>
+                  <td>
+                    <span class="status status-completed">Completed</span>
+                  </td>
+                  <td>
+                    <a
+                      href="sales-receipt.html"
+                      class="btn-action btn-secondary"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>#ORD-002</td>
+                  <td>Jane Smith</td>
+                  <td>Today, 09:15 AM</td>
+                  <td>2,800 RWF</td>
+                  <td>
+                    <span class="status status-completed">Completed</span>
+                  </td>
+                  <td>
+                    <a
+                      href="sales-receipt.html"
+                      class="btn-action btn-secondary"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>#ORD-003</td>
+                  <td>Robert Johnson</td>
+                  <td>Today, 08:45 AM</td>
+                  <td>950 RWF</td>
+                  <td><span class="status status-pending">Pending</span></td>
+                  <td>
+                    <a
+                      href="sales-receipt.html"
+                      class="btn-action btn-secondary"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>#ORD-004</td>
+                  <td>Sarah Williams</td>
+                  <td>Yesterday, 5:30 PM</td>
+                  <td>3,450 RWF</td>
+                  <td>
+                    <span class="status status-completed">Completed</span>
+                  </td>
+                  <td>
+                    <a
+                      href="sales-receipt.html"
+                      class="btn-action btn-secondary"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>#ORD-005</td>
+                  <td>Michael Brown</td>
+                  <td>Yesterday, 4:15 PM</td>
+                  <td>1,750 RWF</td>
+                  <td><span class="status status-canceled">Canceled</span></td>
+                  <td>
+                    <a
+                      href="sales-receipt.html"
+                      class="btn-action btn-secondary"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Animate metric cards on scroll
+        const metricCards = document.querySelectorAll(".metric-card");
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry, index) => {
+              if (entry.isIntersecting) {
+                setTimeout(() => {
+                  entry.target.style.opacity = "1";
+                  entry.target.style.transform = "translateY(0)";
+                }, index * 100);
+              }
+            });
+          },
+          { threshold: 0.1 }
+        );
+
+        metricCards.forEach((card) => {
+          card.style.opacity = "0";
+          card.style.transform = "translateY(20px)";
+          card.style.transition = "all 0.5s ease";
+          observer.observe(card);
+        });
+
+        // Filter functionality
+        const filterBtns = document.querySelectorAll(".filter-btn");
+        filterBtns.forEach((btn) => {
+          btn.addEventListener("click", function () {
+            filterBtns.forEach((b) => b.classList.remove("active"));
+            this.classList.add("active");
+            // In a real app, you would filter data here
+          });
+        });
+
+        // Pagination variables
+        const rowsPerPage = 5;
+        const rows = document.querySelectorAll(".transactions-table tbody tr");
+        const pageCount = Math.ceil(rows.length / rowsPerPage);
+        let currentPage = 1;
+
+        // Create pagination controls
+        const paginationContainer = document.createElement("div");
+        paginationContainer.className = "pagination";
+        paginationContainer.style.display = "flex";
+        paginationContainer.style.justifyContent = "center";
+        paginationContainer.style.marginTop = "1rem";
+        paginationContainer.style.gap = "0.5rem";
+
+        for (let i = 1; i <= pageCount; i++) {
+          const pageBtn = document.createElement("button");
+          pageBtn.textContent = i;
+          pageBtn.className = "pagination-btn";
+          pageBtn.style.padding = "0.5rem 1rem";
+          pageBtn.style.border = "none";
+          pageBtn.style.borderRadius = "4px";
+          pageBtn.style.cursor = "pointer";
+          pageBtn.style.transition = "all 0.3s ease";
+
+          if (i === 1) {
+            pageBtn.style.background = "var(--primary)";
+            pageBtn.style.color = "white";
+          } else {
+            pageBtn.style.background = "var(--primary-light)";
+            pageBtn.style.color = "var(--dark)";
+          }
+
+          pageBtn.addEventListener("click", () => {
+            currentPage = i;
+            updatePagination();
+            updateTableDisplay();
+          });
+
+          paginationContainer.appendChild(pageBtn);
+        }
+
+        document
+          .querySelector(".transactions-container")
+          .appendChild(paginationContainer);
+
+        // Update pagination buttons style
+        function updatePagination() {
+          const buttons = document.querySelectorAll(".pagination-btn");
+          buttons.forEach((btn, index) => {
+            if (index + 1 === currentPage) {
+              btn.style.background = "var(--primary)";
+              btn.style.color = "white";
+            } else {
+              btn.style.background = "var(--primary-light)";
+              btn.style.color = "var(--dark)";
+            }
+          });
+        }
+
+        // Update table display based on current page
+        function updateTableDisplay() {
+          const startIndex = (currentPage - 1) * rowsPerPage;
+          const endIndex = startIndex + rowsPerPage;
+
+          rows.forEach((row, index) => {
+            if (index >= startIndex && index < endIndex) {
+              row.style.display = "";
+            } else {
+              row.style.display = "none";
+            }
+          });
+        }
+
+        // Initialize table display
+        updateTableDisplay();
+
+        // Search functionality
+        const searchBar = document.querySelector(".search-bar");
+        searchBar.addEventListener("input", function () {
+          const searchTerm = this.value.toLowerCase();
+          rows.forEach((row) => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchTerm) ? "" : "none";
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

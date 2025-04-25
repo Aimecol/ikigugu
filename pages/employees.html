@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employees | Business Management</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <style>
+      /* Employees Page Specific Styles */
+      .employees-container {
+        padding: 2rem;
+      }
+
+      .employees-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .search-container {
+        position: relative;
+        flex-grow: 1;
+        max-width: 400px;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary);
+        transition: all 0.3s ease;
+      }
+
+      .search-bar {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 3rem;
+        border: 2px solid var(--primary-light);
+        border-radius: 50px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .search-bar:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+      }
+
+      .add-employee-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .add-employee-btn:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+      }
+
+      .employee-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .employee-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        animation: fadeIn 0.5s ease forwards;
+        opacity: 0;
+      }
+
+      .employee-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .employee-avatar {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .employee-details {
+        padding: 1.5rem;
+      }
+
+      .employee-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+      }
+
+      .employee-position {
+        color: var(--primary);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+
+      .employee-contact {
+        color: var(--gray);
+        margin-bottom: 1rem;
+      }
+
+      .employee-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .action-btn {
+        padding: 0.5rem;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .edit-btn {
+        background: var(--primary-light);
+        color: var(--primary);
+      }
+
+      .edit-btn:hover {
+        background: var(--primary);
+        color: white;
+      }
+
+      .delete-btn {
+        background: #fee2e2;
+        color: #ef4444;
+      }
+
+      .delete-btn:hover {
+        background: #ef4444;
+        color: white;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .employees-header {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .search-container {
+          max-width: 100%;
+          margin-bottom: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2><i class="fas fa-briefcase"></i> Ikigugu</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li>
+              <a href="../index.html"
+                ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="clients.html"><i class="fas fa-users"></i> Clients</a>
+            </li>
+            <li>
+              <a href="products.html"><i class="fas fa-boxes"></i> Products</a>
+            </li>
+            <li>
+              <a href="sales.html"><i class="fas fa-chart-line"></i> Sales</a>
+            </li>
+            <li>
+              <a href="students.html"
+                ><i class="fas fa-user-graduate"></i> Students</a
+              >
+            </li>
+            <li>
+              <a href="courses.html"
+                ><i class="fas fa-book-open"></i> Courses</a
+              >
+            </li>
+            <li>
+              <a href="report.html"><i class="fas fa-file-alt"></i> Reports</a>
+            </li>
+            <li class="active">
+              <a href="employees.html"
+                ><i class="fas fa-user-tie"></i> Employees</a
+              >
+            </li>
+            <li>
+              <a href="./notifications.html"
+                ><i class="fas fa-bell"></i> Notifications</a
+              >
+            </li>
+            <li>
+              <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="main-header">
+          <div class="header-left">
+            <h1>Employees</h1>
+          </div>
+          <div class="header-right">
+            <div class="user-profile">
+              <img src="../images/new.jpg" alt="User" />
+              <span>Admin</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-wrapper">
+          <section class="employees-container">
+            <div class="employees-header">
+              <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input
+                  type="text"
+                  class="search-bar"
+                  placeholder="Search employees..."
+                />
+              </div>
+              <button class="add-employee-btn">
+                <i class="fas fa-plus"></i> Add Employee
+              </button>
+            </div>
+
+            <div class="employee-grid">
+              <!-- Employee Cards will be dynamically generated -->
+              <div class="employee-card" style="animation-delay: 0.1s">
+                <img
+                  src="https://randomuser.me/api/portraits/women/44.jpg"
+                  alt="Employee"
+                  class="employee-avatar"
+                />
+                <div class="employee-details">
+                  <h3 class="employee-name">Sarah Johnson</h3>
+                  <p class="employee-position">Marketing Manager</p>
+                  <p class="employee-contact">
+                    <i class="fas fa-envelope"></i> sarah@example.com<br />
+                    <i class="fas fa-phone"></i> (555) 123-4567
+                  </p>
+                  <div class="employee-actions">
+                    <button class="action-btn edit-btn">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn delete-btn">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="employee-card" style="animation-delay: 0.2s">
+                <img
+                  src="https://randomuser.me/api/portraits/men/32.jpg"
+                  alt="Employee"
+                  class="employee-avatar"
+                />
+                <div class="employee-details">
+                  <h3 class="employee-name">Michael Chen</h3>
+                  <p class="employee-position">Senior Developer</p>
+                  <p class="employee-contact">
+                    <i class="fas fa-envelope"></i> michael@example.com<br />
+                    <i class="fas fa-phone"></i> (555) 987-6543
+                  </p>
+                  <div class="employee-actions">
+                    <button class="action-btn edit-btn">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn delete-btn">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="employee-card" style="animation-delay: 0.3s">
+                <img
+                  src="https://randomuser.me/api/portraits/women/68.jpg"
+                  alt="Employee"
+                  class="employee-avatar"
+                />
+                <div class="employee-details">
+                  <h3 class="employee-name">Emily Rodriguez</h3>
+                  <p class="employee-position">HR Specialist</p>
+                  <p class="employee-contact">
+                    <i class="fas fa-envelope"></i> emily@example.com<br />
+                    <i class="fas fa-phone"></i> (555) 456-7890
+                  </p>
+                  <div class="employee-actions">
+                    <button class="action-btn edit-btn">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn delete-btn">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script src="../js/dashboard.js" defer></script>
+    <script src="../js/employees.js"></script>
+  </body>
+</html>

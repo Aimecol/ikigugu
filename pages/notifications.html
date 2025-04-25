@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ikigugu - Notifications</title>
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <link rel="stylesheet" href="../css/animations.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .notification-container {
+        padding: 20px;
+      }
+
+      .notification-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .notification-title {
+        font-size: 1.8rem;
+        color: #2c3e50;
+        font-weight: 600;
+      }
+
+      .notification-count {
+        background-color: #e74c3c;
+        color: white;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.8rem;
+      }
+
+      .notification-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .notification-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .notification-card.unread {
+        border-left: 4px solid #3498db;
+      }
+
+      .notification-card.important {
+        border-left: 4px solid #e74c3c;
+      }
+
+      .notification-card.success {
+        border-left: 4px solid #2ecc71;
+      }
+
+      .notification-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .notification-title {
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0;
+      }
+
+      .notification-time {
+        font-size: 0.8rem;
+        color: #7f8c8d;
+      }
+
+      .notification-content {
+        color: #34495e;
+        margin-bottom: 0.5rem;
+      }
+
+      .notification-actions {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .notification-action {
+        color: #3498db;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+
+      .notification-action:hover {
+        color: #2980b9;
+      }
+
+      .mark-all-read {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .mark-all-read:hover {
+        background: #2980b9;
+      }
+
+      @media (max-width: 768px) {
+        .notification-container {
+          padding: 1rem;
+        }
+
+        .notification-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2><i class="fas fa-briefcase"></i> Ikigugu</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li>
+              <a href="../index.html"
+                ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="./clients.html"><i class="fas fa-users"></i> Clients</a>
+            </li>
+            <li>
+              <a href="./products.html"
+                ><i class="fas fa-boxes"></i> Products</a
+              >
+            </li>
+            <li>
+              <a href="./sales.html"><i class="fas fa-chart-line"></i> Sales</a>
+            </li>
+            <li>
+              <a href="./students.html"
+                ><i class="fas fa-user-graduate"></i> Students</a
+              >
+            </li>
+            <li>
+              <a href="courses.html"
+                ><i class="fas fa-book-open"></i> Courses</a
+              >
+            </li>
+            <li>
+              <a href="./report.html"
+                ><i class="fas fa-file-alt"></i> Reports</a
+              >
+            </li>
+            <li>
+              <a href="employees.html"
+                ><i class="fas fa-user-tie"></i> Employees</a
+              >
+            </li>
+            <li class="active">
+              <a href="./notifications.html"
+                ><i class="fas fa-bell"></i> Notifications</a
+              >
+            </li>
+            <li>
+              <a href="./profile.html"><i class="fas fa-user"></i> Profile</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="main-header">
+          <div class="header-left">
+            <h1>Sales Dashboard</h1>
+          </div>
+          <div class="header-right">
+            <div class="user-profile">
+              <img src="../images/new.jpg" alt="User" />
+              <span>Admin</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </header>
+        <div class="notification-container">
+          <div class="notification-header">
+            <h1 class="notification-title">
+              Notifications <span class="notification-count">3</span>
+            </h1>
+            <button class="mark-all-read">Mark All as Read</button>
+          </div>
+
+          <div class="notification-list">
+            <div class="notification-card unread">
+              <div class="notification-card-header">
+                <h3 class="notification-title">New Sale Completed</h3>
+                <span class="notification-time">2 hours ago</span>
+              </div>
+              <p class="notification-content">
+                Client John Doe purchased Product A for $199.99
+              </p>
+              <div class="notification-actions">
+                <span class="notification-action">View Sale</span>
+                <span class="notification-action">Dismiss</span>
+              </div>
+            </div>
+
+            <div class="notification-card important">
+              <div class="notification-card-header">
+                <h3 class="notification-title">Low Stock Alert</h3>
+                <span class="notification-time">5 hours ago</span>
+              </div>
+              <p class="notification-content">
+                Product B is running low on stock (only 3 items left)
+              </p>
+              <div class="notification-actions">
+                <span class="notification-action">Restock</span>
+                <span class="notification-action">Dismiss</span>
+              </div>
+            </div>
+
+            <div class="notification-card success">
+              <div class="notification-card-header">
+                <h3 class="notification-title">New Student Enrollment</h3>
+                <span class="notification-time">1 day ago</span>
+              </div>
+              <p class="notification-content">
+                Jane Smith enrolled in Course "Web Development Fundamentals"
+              </p>
+              <div class="notification-actions">
+                <span class="notification-action">View Student</span>
+                <span class="notification-action">Dismiss</span>
+              </div>
+            </div>
+
+            <div class="notification-card">
+              <div class="notification-card-header">
+                <h3 class="notification-title">System Update Available</h3>
+                <span class="notification-time">2 days ago</span>
+              </div>
+              <p class="notification-content">
+                Version 2.1.0 is now available with new features and bug fixes
+              </p>
+              <div class="notification-actions">
+                <span class="notification-action">Update Now</span>
+                <span class="notification-action">Dismiss</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+    <script>
+      // Animation for notification cards
+      document.addEventListener("DOMContentLoaded", function () {
+        const cards = document.querySelectorAll(".notification-card");
+        cards.forEach((card, index) => {
+          setTimeout(() => {
+            card.style.opacity = "1";
+            card.style.transform = "translateY(0)";
+          }, index * 100);
+        });
+
+        // Mark all as read functionality
+        const markAllReadBtn = document.querySelector(".mark-all-read");
+        markAllReadBtn.addEventListener("click", function () {
+          cards.forEach((card) => {
+            card.classList.remove("unread");
+          });
+          document.querySelector(".notification-count").textContent = "0";
+        });
+      });
+    </script>
+  </body>
+</html>
